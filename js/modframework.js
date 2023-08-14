@@ -121,9 +121,7 @@ function applyMods(firmware) {
 function log(message, replace = false) {
   const consoleArea = document.getElementById('console');
 
-  // Append the new message to the existing content and add a newline
-  consoleArea.value += message + '\n';
-if (replace) {
+  if (replace) {
     // Replace the last line with the new message
     const lastLineIndex = consoleArea.value.lastIndexOf('\n');
     consoleArea.value = consoleArea.value.substring(0, lastLineIndex) + '\n' + message;
