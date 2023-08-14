@@ -118,7 +118,7 @@ function applyMods(firmware) {
   return firmware;
 }
 
-function log(message) {
+function log(message, replace = false) {
   const consoleArea = document.getElementById('console');
 
   // Append the new message to the existing content and add a newline
