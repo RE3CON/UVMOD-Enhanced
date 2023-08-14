@@ -187,7 +187,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li>Click "Save" to download the finished firmware file.</li>
                   </ol>
 
-                  <h3 class="mt-4">Flashing</h3>
+                  <h3 class="mt-4">Flashing directly with UVMOD</h3>
+                  <p>Modern Chromium-based browsers such as Chrome, Edge, and Opera have a built-in API
+                    that allows UVMOD to flash the firmware directly to the radio. This is the easiest way to flash the
+                    firmware, but it only works on Windows and Linux.</p>
+                  <p>On Windows, you need the driver for the
+                    programming cable. Typically these cables use ch340, ch341 or cp210x chips. On linux, the driver is
+                    usually included. </p>
+                  <ol>
+                    <li>Connect the programming cable to your computer and ensure the proper drivers are installed. It should show up as a com port.</li>
+                    <li>On your radio (still disconnected and turned off), hold down PTT (large button on the side) and
+                      turn on the radio while still holding PTT. Now the flashlight should turn on while the rest of the
+                      radio stays dark. Your radio is now in bootloader mode.</li>
+                    <li>Connect the programming cable to the radio.</li>
+                    <li>Click "Flash directly" and wait for the process to finish. You can watch progress in the console. </li>
+                    <li>All done, all your settings should still all be intact.</li>
+                  </ol>
+
+                  <h3 class="mt-4">Flashing with the official software</h3>
                   <p>If you use Windows, you can use the official updater tool. You can download it directly from UVMOD
                     using the link in the console window.</p>
                   <ol>
