@@ -1,5 +1,38 @@
 modClasses = [
+class Mod_changeTone extends FirmwareMod {
+        constructor() {
+            super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F2 Key used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
+            this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
+                    }
 
+        apply(firmwareData) {
+            const offset = 0x29cc;
+            const tone = Math.trunc(parseInt(this.inputTone.value));
+            
+            if (tone >= 0xFFFF) {
+                // Create an 8-byte buffer with the specified values
+                const buffer = new ArrayBuffer(8);
+                const dataView = new DataView(buffer);
+
+                // Set tone at their respective offsets
+                dataView.setUint32(0, tone, true); // true indicates little-endian byte order
+                
+                // Convert the buffer to a Uint8Array
+                const tonesHex = new Uint8Array(buffer);
+
+                // Replace the 8-byte section at the offset with the new buffer
+                firmwareData = replaceSection(firmwareData, toneHex, offset);
+                
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
