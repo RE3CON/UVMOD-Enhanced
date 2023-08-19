@@ -1,5 +1,5 @@
 modClasses = [
-class Mod_ChangeToneBrust extends FirmwareMod {
+class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno Py nor JS, just modding stuff 4 people 2 help
         constructor() {
             super("Repeater Call Tone Burst", "Push Button F2 [Flashlight] + PTT at the same time sends a 1750Hz tone by default for repeater in the EU. NOAA demute is 1050 Hz. Used tone pulse freq. are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Pulse Hz value from 1000-3800:", "1750");
@@ -90,11 +90,13 @@ class Mod_ChangeToneBrust extends FirmwareMod {
         }
     }
     ,  
-    class Mod_ChangeTXLimits extends FirmwareMod {
+    class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch 3 or 4 longer hex strings on different locations/offsets for tx +rx
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "600");
+            this.inputMinTX.disabled = true;
+            this.inputMaxTX.disabled = true; // need coding help to patch it on 2 different offsets/places!!!  
         }
 
         apply(firmwareData) {
