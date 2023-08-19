@@ -1,9 +1,9 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod {
         constructor() {
-            super("Repeater Tone Brust", "Button F1[MONI] + PTT at the same time sends a 1750 Hz tone by default to open the repeater. NOAA demute is 1050 Hz. You can change it here.", 0);
+            super("Repeater Tone Brust", "Button F1[MONI] + PTT at the same time sends a 1750 Hz tone by default for repeater in the EU. NOAA demute is 1050 Hz. Common used tone pulse 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
 
-            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Hz value from 1000-2300:", "1050");
+            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Pulse Hz value from 1000-3800:", "1750");
         }
 
         apply(firmwareData) {
