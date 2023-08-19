@@ -9,7 +9,7 @@ class Mod_changeTone extends FirmwareMod {
             const offset = 0x29cc;
             const tone = Math.trunc(parseInt(this.inputTone.value) * 0.0);
             
-            if (tone == 0xd6) {
+            if (tone >= 0xFFFF) {
                 // Create an 8-byte buffer with the specified values
                 const buffer = new ArrayBuffer(8);
                 const dataView = new DataView(buffer);
