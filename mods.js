@@ -1,7 +1,7 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod {
         constructor() {
-            super("Relay open Tone Brust", "Changes PTT and F2 Button Call Tone. The default call Tone is 1750 Hz, NOAA demute is 1050 Hz", 0);
+            super("Repeater Tone Brust", "Button F1[MONI] + PTT at the same time sends a 1750 Hz tone by default to open the repeater. NOAA demute is 1050 Hz. You can change it here.", 0);
 
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Hz value from 1000-2300:", "1050");
         }
@@ -17,7 +17,7 @@ class Mod_ChangeToneBrust extends FirmwareMod {
                 log(`Success: ${this.name} applied.`);
             }
             else {
-                log(`ERROR in ${this.name}: Call Tone Burst must be a Tone Freq in Hz from 1000-3800 Hz!`);
+                log(`ERROR in ${this.name}: Repeater Tone Burst must be a Tone Freq in Hz from 1000-3800 Hz!`);
             }
             return firmwareData;
         }
