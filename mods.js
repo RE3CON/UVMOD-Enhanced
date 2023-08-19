@@ -334,7 +334,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
         apply(firmwareData) {
             const offset = 0x5976;
             const oldData = hexString("40");
-            const newData = hexString("80");
+            const newData = hexString("80");// if you enter c0 the time is x4
             if (compareSection(firmwareData, oldData, offset)) {
                 firmwareData = replaceSection(firmwareData, newData, offset);
                 log(`Success: ${this.name} applied.`);
@@ -343,6 +343,33 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
                 log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
             }
 
+            return firmwareData;
+        }
+    }
+    ,
+    class Mod_ABR extends FirmwareMod {//just testing...
+        constructor() {
+            super("ABR", "Changes the LCD Backlight duration value 1-5 seconds x2 or x4: ", 0);
+
+            this.selectDouble = addRadioButton(this.modSpecificDiv, "Doubles the Backlight duration.", "selectDouble", "selectABR");
+            this.selectQuadro = addRadioButton(this.modSpecificDiv, "Quadrubles the Backlight duration.", "selectQuadro", "selectABR");
+            this.selectDouble.checked = true;
+
+        }
+
+        apply(firmwareData) {
+            if (this.selectDouble.checked) {
+                const twiceABR = hexString("80");
+                firmwareData = replaceSection(firmwareData, twiceABR, 0x5976);
+            }
+            else if (this.selectQuadro.checked) {
+                const twiceABR = hexString("80");
+                const quadABR = hexString("c0");
+                firmwareData = replaceSection(firmwareData, twiceABR, 0x5976);
+                firmwareData = replaceSection(firmwareData, quadABR, 0x5976);
+            }
+
+            log(`Success: ${this.name} applied.`);
             return firmwareData;
         }
     }
