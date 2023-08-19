@@ -23,7 +23,7 @@ class Mod_ChangeToneBrust extends FirmwareMod {
         }
     }
     ,
-class Mod_changeTone extends FirmwareMod {
+/*class Mod_changeTone extends FirmwareMod {
         constructor() {
             super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
@@ -57,7 +57,7 @@ class Mod_changeTone extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,/*
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
