@@ -89,7 +89,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
             return firmwareData;
         }
     }
-    ,  
+    ,  //add 500k steps @0xe0d2: 0xC4 0x09 changed to 0x50 0xC3   
     class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
@@ -124,7 +124,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
             return firmwareData;
         }
     }
-    ,        
+    ,     
     class Mod_DisableTXlock extends FirmwareMod {
         constructor() {
             super("Disable TX Lock from 50-600 MHz", "Enables transmitting on frequencies from 50 MHz to 600 MHz. The harmonic wave radiation can be stronger than on the input frequency and cause severe interference!", 0);
