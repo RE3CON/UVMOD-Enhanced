@@ -90,13 +90,13 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
         }
     }
     ,  
-    class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch 3 or 4 longer hex strings on different locations/offsets for tx +rx
+    class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "600");
             this.inputMinTX.disabled = true;
-            this.inputMaxTX.disabled = true; // need coding help to patch it on 2 different offsets/places!!!  
+            this.inputMaxTX.disabled = true; // need coding help to patch it on 2 different offsets/places for RX and TX combiened!!!  
         }
 
         apply(firmwareData) {
