@@ -1,13 +1,13 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno Py nor JS, just modding stuff 4 people 2 help
         constructor() {
-            super("Repeater Call Tone Burst", "Push Button F2 [Flashlight] + PTT at the same time sends a 1750Hz tone by default for repeater in the EU. NOAA demute is 1050 Hz. Used tone pulse freq. are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
-            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Pulse Hz value from 1000-3800:", "1750");
+            super("Repeater Tone Burst", "Push Button F2 [Flashlight] + PTT at the same together sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
+            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
         }
 
         apply(firmwareData) {
             const minValue = 1000;
-            const maxValue = 3800;
+            const maxValue = 3950;
             const inputValue = parseInt(this.contrastValue.value);
 
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
@@ -16,7 +16,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
                 log(`Success: ${this.name} applied.`);
             }
             else {
-                log(`ERROR in ${this.name}: Repeater Tone Burst must be a Tone Freq. in Hz from 1000-3800 Hz!`);
+                log(`ERROR in ${this.name}: Repeater Tone Burst must be a Tone Freq. in Hz from 1000-3950 Hz!`);
             }
             return firmwareData;
         }
@@ -235,7 +235,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_BatteryIcon extends FirmwareMod {
         constructor() {
-            super("Battery icon", "Changes the battery icon to a more modern look.", 0);
+            super("Battery icon", "Changes the battery icon to a modern look.", 0);
         }
 
         apply(firmwareData) {
@@ -349,7 +349,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_ABR extends FirmwareMod {//just testing...
         constructor() {
-            super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value 1|2|3|4|5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
+            super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
 
             this.selectDouble = addRadioButton(this.modSpecificDiv, "Doubles the Backlight Time-On duration ABR settings 1 - 5 sec. x2.", "selectDouble", "selectABR");
             this.selectQuadro = addRadioButton(this.modSpecificDiv, "Quadrubles the Backlight Time-On duration ABR settings 1 - 5 sec. x4.", "selectQuadro", "selectABR");
@@ -376,7 +376,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_SkipBootscreen extends FirmwareMod {
         constructor() {
-            super("Skip Bootscreen", "Skips the bootscreen and instantly goes to the LCD main screen by power on.", 0);
+            super("Fast Power-ON", "Skips the bootscreen and goes instantlyto the LCD main screen by power on.", 0);
         }
 
         apply(firmwareData) {
@@ -397,7 +397,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_MenuStrings extends FirmwareMod {
         constructor() {
-            super("Menu strings", "Changes text in the settings menu. The displayed JSON contains every string with offset, description and size. Only edit the string. Do not insert more characters as allowed by the fixed size value!", 0);
+            super("Menu Names strings", "Changes text in the settings menu. The displayed JSON contains every string with offset, description and size. Only edit the \"string\". Do not insert more capital letters and characters as allowed by the fixed \"size\" value!", 0);
 
             // the  b l o c k
             const strings = [{ "offset": 56470, "description": "squelch", "size": 6, "string": "SQLCH" }, { "offset": 56477, "description": "step", "size": 6, "string": "STEP" }, { "offset": 56484, "description": "txpower", "size": 6, "string": "TXPWR" }, { "offset": 56491, "description": "r dcs", "size": 6, "string": "R_DCS" },
@@ -486,7 +486,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_NegativeDisplay extends FirmwareMod {
         constructor() {
-            super("Negative Display", "Inverts the LCD display apperiance.", 0);
+            super("Negative Display", "Inverts the LCD display apperiance. White fonts on black bachground.", 0);
         }
 
         apply(firmwareData) {
@@ -582,7 +582,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_EnableSWDPort extends FirmwareMod {
         constructor() {
-            super("Enable SWD Port", "If you don't know what SWD is, you don't need this! Allows debugging via SWD. You will need to solder wires to the main board of the radio and connect them to specialized hardware. ", 0);
+            super("Enable SWD Port", "Allows via (SWD) Serial Wire Debug. Requires to solder 2-pin wire on the radios mainboard. Alternative to JTAG using the same protocol. ", 0);
         }
 
         apply(firmwareData) {
@@ -651,7 +651,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_NOAAFrequencies extends FirmwareMod {
         constructor() {
-            super("NOAA Frequencies", "The NOAA scan feature is unique because it can scan in the background, all the time and stop only if a 1050 Hz Ton received to demute the speaker. However most people dont need the weather alerts or dont have NOAA in their country. This mod lets you change the frequencies so you can use the NOAA scan function for something else. The values below are pre-set to the first 10 PMR446 channels. A 1050 Hz Ton >150ms can be send with the Rogger Beep mod", 0);
+            super("NOAA Frequencies", "The NOAA scan feature is unique because it can scan in the background, all the time and stop only if a 1050 Hz Ton received to demute the speaker. However most people dont need the weather alerts or dont have NOAA in their country. This mod lets you change the frequencies so you can use the NOAA scan function for something else. The values below are pre-set to the first 10 PMR446 channels. A 1050 Hz Ton >150ms can be send with the Rogger Beep mod or Repeater Ton mod", 0);
             this.inputFreq1 = addInputField(this.modSpecificDiv,   "Frequency 1 (Hz)", "446006250");
             this.inputFreq2 = addInputField(this.modSpecificDiv,   "Frequency 2 (Hz)", "446018750");
             this.inputFreq3 = addInputField(this.modSpecificDiv,   "Frequency 3 (Hz)", "446031250");
