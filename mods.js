@@ -1,4 +1,28 @@
 modClasses = [
+class Mod_ChangeToneBrust extends FirmwareMod {
+        constructor() {
+            super("Relay open Tone Brust", "Changes PTT and F2 Tone. The default Hz Tone is 1750, NOAA demute is 1050", 0);
+
+            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Hz value from 1000-2300:", "1050");
+        }
+
+        apply(firmwareData) {
+            const minValue = 1000;
+            const maxValue = 2300;
+            const inputValue = parseInt(this.contrastValue.value);
+
+            if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
+                const newData = new Uint8Array([inputValue]);
+                firmwareData = replaceSection(firmwareData, newData, 0x29CC);
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Contrast value must be a Hz Tone Freq from 1000-2300 Hz!`);
+            }
+            return firmwareData;
+        }
+    }
+    ,
 class Mod_changeTone extends FirmwareMod {
         constructor() {
             super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F2 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
