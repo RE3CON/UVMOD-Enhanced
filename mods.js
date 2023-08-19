@@ -1,14 +1,14 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod {
         constructor() {
-            super("Relay open Tone Brust", "Changes PTT and F2 Tone. The default Hz Tone is 1750, NOAA demute is 1050", 0);
+            super("Relay open Tone Brust", "Changes PTT and F2 Button Call Tone. The default call Tone is 1750 Hz, NOAA demute is 1050 Hz", 0);
 
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Hz value from 1000-2300:", "1050");
         }
 
         apply(firmwareData) {
             const minValue = 1000;
-            const maxValue = 2300;
+            const maxValue = 3800;
             const inputValue = parseInt(this.contrastValue.value);
 
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
@@ -17,7 +17,7 @@ class Mod_ChangeToneBrust extends FirmwareMod {
                 log(`Success: ${this.name} applied.`);
             }
             else {
-                log(`ERROR in ${this.name}: Contrast value must be a Hz Tone Freq from 1000-2300 Hz!`);
+                log(`ERROR in ${this.name}: Call Tone Burst must be a Tone Freq in Hz from 1000-3800 Hz!`);
             }
             return firmwareData;
         }
