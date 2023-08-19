@@ -1,7 +1,7 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod {
         constructor() {
-            super("Repeater Tone Brust", "Button F1[MONI] + PTT at the same time sends a 1750 Hz tone by default for repeater in the EU. NOAA demute is 1050 Hz. Common used tone pulse 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
+            super("Repeater Call Tone Burst", "Button F1[MONI] + PTT at the same time sends a 1750Hz tone by default for repeater in the EU. NOAA demute is 1050 Hz. Used tone pulse are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
 
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Pulse Hz value from 1000-3800:", "1750");
         }
@@ -25,16 +25,16 @@ class Mod_ChangeToneBrust extends FirmwareMod {
     ,
 class Mod_changeTone extends FirmwareMod {
         constructor() {
-            super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F2 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
+            super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
                     }
 
         apply(firmwareData) {
             const offset = 0x29cc;
                 
-            const tone = Math.trunc(parseInt(this.inputTone.value) * 0.0);
+            const tone = (this.inputTone.value);
             
-            if (tone >= 0xd6c06) {
+            if (tone >= 0xffff) {
                 // Create an 8-byte buffer with the specified values
                 const buffer = new ArrayBuffer(8);
                 const dataView = new DataView(buffer);
