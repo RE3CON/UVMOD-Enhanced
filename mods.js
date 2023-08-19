@@ -349,10 +349,10 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_ABR extends FirmwareMod {//just testing...
         constructor() {
-            super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight value 1-5 seconds x2 or x4, a value of 5 is 10 seconds or 20 seconds: ", 0);
+            super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time value 1-5 seconds x2 or x4. A value of 5 is 10 seconds or 20 seconds: ", 0);
 
-            this.selectDouble = addRadioButton(this.modSpecificDiv, "Doubles the Backlight duration (x2).", "selectDouble", "selectABR");
-            this.selectQuadro = addRadioButton(this.modSpecificDiv, "Quadrubles the Backlight duration (x4).", "selectQuadro", "selectABR");
+            this.selectDouble = addRadioButton(this.modSpecificDiv, "Doubles the Backlight duration ABR settings 1 - 5 sec. x2.", "selectDouble", "selectABR");
+            this.selectQuadro = addRadioButton(this.modSpecificDiv, "Quadrubles the Backlight duration ABR settings 1 - 5 sec. x4.", "selectQuadro", "selectABR");
             this.selectDouble.checked = true;
 
         }
