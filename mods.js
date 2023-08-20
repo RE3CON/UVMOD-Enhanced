@@ -376,7 +376,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
     class Mod_SkipBootscreen extends FirmwareMod {
         constructor() {
-            super("Fast Power-ON", "Skips the bootscreen and goes instantlyto the LCD main screen by power on.", 0);
+            super("Fast Power-ON", "Skips the bootscreen and goes instantly to the LCD main screen by power on.", 0);
         }
 
         apply(firmwareData) {
