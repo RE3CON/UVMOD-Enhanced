@@ -307,10 +307,10 @@ class Mod_changeTone extends FirmwareMod {
     ,*/
      class Mod_Font extends FirmwareMod {
         constructor() {
-            super("Font", "Changes the font to one of the following custom fonts: ", 0);
+            super("Font", "Changes the font apperiance on LCD to custom fonts: ", 0);
 
-            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, larger digits but not in bold as default", "selectVCR", "selectFont");
-            this.selectFuturistic = addRadioButton(this.modSpecificDiv, "Futuristic Font (by DO7OO), replaces big and small digits", "selectFuturistic", "selectFont");
+            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, replace the bold digits with bigger fonts.", "selectVCR", "selectFont");
+            this.selectFuturistic = addRadioButton(this.modSpecificDiv, "Futuristic Font (by DO7OO), replaces bold and small digits in a futuristic look.", "selectFuturistic", "selectFont");
             this.selectTunas1337 = addRadioButton(this.modSpecificDiv, "Font by Tunas1337, replace letters and numbers", "selectTunas1337","selectFont");
 
             this.selectVCR.checked = true;
