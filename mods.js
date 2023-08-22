@@ -398,7 +398,7 @@ class Mod_5tonetest extends FirmwareMod {
             this.select2 = addRadioButton(this.modSpecificDiv, "2x - up to 10s Backlight on", "select2", "selectBacklightDuration");
             this.select4 = addRadioButton(this.modSpecificDiv, "4x - up to 20s Backlight on", "select4", "selectBacklightDuration");
             this.select8 = addRadioButton(this.modSpecificDiv, "8x - up to 40s Backlight on", "select8", "selectBacklightDuration");
-            this.select40 = addRadioButton(this.modSpecificDiv, "10x - up to 50s Backlight on", "select40", "selectBacklightDuration");
+            this.select10 = addRadioButton(this.modSpecificDiv, "10x - up to 50s Backlight on", "select10", "selectBacklightDuration");
             
             this.select2.checked = true;
         }
@@ -419,13 +419,13 @@ class Mod_5tonetest extends FirmwareMod {
             else if (this.select8.checked) {
                 dataView.setUint32(0, 256, true);
             }
-           else if (this.select8.checked) {
+           else if (this.select10.checked) {
                 dataView.setUint32(0, 320, true);
             }         
-         /*   else if (this.selectTriplica.checked) {
-                const triABR = hexString("a0");//a0 = 40 segundos*/
+          /*  else if (this.selectTriplica.checked) {
+                const triABR = hexString("a0");//a0 = 40 segundos
                 firmwareData = replaceSection(firmwareData, triABR, 0x5976);
-            }
+            }*/  ///argh.... !Matoz @spm81
 
             const newData = new Uint8Array(buffer);
             firmwareData = replaceSection(firmwareData, newData, offset);
