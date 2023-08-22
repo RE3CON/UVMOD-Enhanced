@@ -12,7 +12,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
 //must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
-                firmwareData = replaceSection(firmwareData, newData, 0x29cc);
+                firmwareData = replaceSection(firmwareData, newData, 0x29cc);//should replace from 0x29cc-0x29cd, maybe +4
                 log(`Success: ${this.name} applied.`);
             }
             else {
@@ -60,7 +60,7 @@ class Mod_changeTone extends FirmwareMod {
 
 class Mod_Beep extends FirmwareMod {
         constructor() {
-            super("Beep", "Repeater Ton Call", 0);
+            super("Beep (Code Test Exerminental)", "Repeater Ton Call", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1050");
          //   this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1310");
         }
