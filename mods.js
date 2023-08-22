@@ -9,7 +9,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
             const minValue = 1000;
             const maxValue = 3950;
             const inputValue = parseInt(this.contrastValue.value);
-//must be redone with math instr. write from offset 0x29cc to 0x29cd !
+//must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
                 firmwareData = replaceSection(firmwareData, newData, 0x29cc);
@@ -59,7 +59,7 @@ class Mod_changeTone extends FirmwareMod {
     ,
   class Mod_5tonetest extends FirmwareMod {
         constructor() {
-            super("5-tone ZVEI2 - Experimental", "To send a selective 5-tone ZVEI2 instead of DTMF 123A1", 0);
+            super("5-tone ZVEI2 (Experimental)", "To send a selective 5-tone ZVEI2 instead of DTMF 123A1", 0);
             this.inputTone1 = addInputField(this.modSpecificDiv, "Tone 1 frequency (Hz)", "1270");
             this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 3 frequency (Hz)", "1060");
             this.inputTone3 = addInputField(this.modSpecificDiv, "Tone 9 frequency (Hz)", "2200");
@@ -109,7 +109,7 @@ class Mod_changeTone extends FirmwareMod {
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
-            super("TX and RX from 18-1300MHz (Tunas1337 Mod diffs)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
+            super("TX and RX from 18-1300MHz (Tunas1337 diffs by RECON)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
         }
         apply(firmwareData) {
             const offset0 = 0x150d;  //diffs by spm81 taken from Tunas1337 18-1300 Mod   
@@ -144,7 +144,7 @@ class Mod_changeTone extends FirmwareMod {
     ,  //add 500k steps @0xe0d2: 0xC4 0x09 changed to 0x50 0xC3  
    class Mod_add500Ksteps extends FirmwareMod {
         constructor() {
-            super("Add 500kHz Steps", "Switch in 0,5 MHz Steps the freq up and down. Usefull >999MHz to reach above the GHz range", 0);//Diffs by RE3CON, taken from Tunas1337
+            super("Add 500kHz Steps", "Switch the freq in 0,5 MHz Steps. Usefull >999MHz to reach above the GHz range quickly", 0);//Diffs by RE3CON, taken from Tunas1337
         }
 
         apply(firmwareData) {
@@ -165,7 +165,7 @@ class Mod_changeTone extends FirmwareMod {
     ,//just a quick edit... EOT credits by RE3CON
    class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
-            super("Custom RX Limits - Experimental", "Allows receive in the specified frequency range.", 0);
+            super("Custom RX Limits (Experimental)", "Allows receive in the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "600");
          //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
@@ -425,11 +425,11 @@ class Mod_changeTone extends FirmwareMod {
     ,*/
      class Mod_Font extends FirmwareMod {
         constructor() {
-            super("Font", "Changes the font apperiance on LCD to custom fonts: ", 0);
+            super("Font", "Changes the font apperiance on LCD with custom fonts: ", 0);
 
-            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, replace the bold digits with bigger fonts.", "selectVCR", "selectFont");
+            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, replace the smaller bold digits with bigger thinner fonts.", "selectVCR", "selectFont");
             this.selectFuturistic = addRadioButton(this.modSpecificDiv, "Futuristic Font (by DO7OO), replaces bold and small digits in a futuristic look.", "selectFuturistic", "selectFont");
-            this.selectTunas1337 = addRadioButton(this.modSpecificDiv, "Font by Tunas1337, replace letters and numbers", "selectTunas1337","selectFont");
+            this.selectTunas1337 = addRadioButton(this.modSpecificDiv, "Font by Tunas1337, replace letters and numbers.", "selectTunas1337","selectFont");
 
             this.selectVCR.checked = true;
 
@@ -478,7 +478,7 @@ class Mod_changeTone extends FirmwareMod {
     ,
      class Mod_AirCopy extends FirmwareMod {
         constructor() {
-            super("AIR COPY", "Change the AIR COPY Freq to copy wireless the memory channels and settings from one radio to another over the air. The default is 410,025 MHz. To enter in this feature press F2 [Flashlight] + PTT together while switching power on.", 0);
+            super("AIR COPY", "Change the AIR COPY Freq to transfer/receive wireless the memory channels and settings from one radio to another over the air. The default is 410,025 MHz. Enter in this feature, press F2 [Flashlight] + PTT together while switching power on.", 0);
             this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequência Air Copy (Hz)", "433600000");
  
         }
@@ -823,7 +823,7 @@ class Mod_changeTone extends FirmwareMod {
     ,
     class Mod_RSSI extends FirmwareMod {
         constructor() {
-            super("RSSI", "Experimental mod. Adds a battery voltage readout in the status bar. Replaces the signal strength meter with a numerical RSSI readout and adds another optional element: You can choose to either have an S-Meter with bargraph (signal strength in 6dB increments) or an RSSI graph showing RSSI over time.", "2250 or 1424");
+            super("RSSI (Experimemtal)", "Adds a battery voltage readout in the status bar. Replaces the signal strength meter with a numerical RSSI readout and adds another optional element: You can choose to either have an S-Meter with bargraph (signal strength in 6dB increments) or an RSSI graph showing RSSI over time.", "2250 or 1424");
 
             this.selectSbar = addRadioButton(this.modSpecificDiv, "Select S-Meter, uses 2250 Bytes of additional Flash", "selectSbar", "selectRSSI");
             this.selectGraph = addRadioButton(this.modSpecificDiv, "Select RSSI Graph, uses 1424 Bytes of additional Flash CURRENTLY BROKEN", "selectGraph", "selectRSSI");
