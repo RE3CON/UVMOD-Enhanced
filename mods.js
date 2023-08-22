@@ -139,7 +139,7 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,  //add 500k steps @0xe0d2: C409 changed to 50C3   
-    class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
+   /* class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
         coclass Mod_ChangeTXLimits extends FirmwareMod {
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range..", 0);
@@ -187,7 +187,52 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }    
-    ,     
+    ,     */
+     class Mod_ChangetxRXLimits extends FirmwareMod {
+        constructor() {
+            super("Estender Limites de RX (UVMOD Mod by Matoz)", "Permite a recepÃ§Ã£o  na faixa de frequÃªncia especificada.", 0);
+            this.inputMinTX = addInputField(this.modSpecificDiv, "Especifique um novo valor para a frequÃªncia mÃ­nima na faixa de 1-1300 MHz:", "50");
+            this.inputMaxTX = addInputField(this.modSpecificDiv, "Especifique um novo valor para a frequÃªncia mÃ¡xima na faixa de 1 a 1300 MHz:", "600");
+         //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
+         //   this.selectRXTX = addRadioButton(this.modSpecificDiv, "RX + TX", "selectSbar", "selectApp");
+            //this.hidden = true;
+            
+        }
+
+        apply(firmwareData) {
+            
+            const offsetlow = 0xe078;
+            const offsethi = 0xe0a8;
+            const txStart = parseInt(this.inputMinTX.value) * 100000;
+            const txStop = parseInt(this.inputMaxTX.value) * 100000;
+
+            if ((txStart <= txStop) && (txStart >= 100000) && (txStart <= 130000000) && (txStop >= 100000) && (txStop <= 130000000)) {
+
+                const buffer = new ArrayBuffer(8);
+                const dataView = new DataView(buffer);
+
+                dataView.setUint32(0, txStart, true);
+                
+
+                const txHex = new Uint8Array(buffer);
+
+                firmwareData = replaceSection(firmwareData, txHex, offsetlow);
+                dataView.setUint32(0, txStop, true);
+                firmwareData = replaceSection(firmwareData, txHex, offsethi);
+           //     if (this.selectRX.checked) {}
+            //    else if (this.selectRXTX.checked) {
+              //  firmwareData = replaceSection(firmwareData, hexString("1868"), 0x180e);}//43CC
+                //else
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`Error in ${this.name}: Incorrect data! The frequencies must be greater than 18 MHz and less than 1300 MHz, the maximum greater than or equal to the minimum. `);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,          
     class Mod_DisableTXlock extends FirmwareMod {
         constructor() {
             super("Disable TX Lock from 50-600 MHz", "Enables transmitting on frequencies from 50 MHz to 600 MHz. The harmonic wave radiation can be stronger than on the input frequency and cause severe interference!", 0);
