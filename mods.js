@@ -12,7 +12,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
 //must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
-                firmwareData = replaceSection(firmwareData, newData, 0x29cc);
+                firmwareData = replaceSection(firmwareData, newData, 0x29cc:0x29cd);
                 log(`Success: ${this.name} applied.`);
             }
             else {
@@ -33,7 +33,7 @@ class Mod_changeTone extends FirmwareMod {
                 
             const tone = (this.inputTone.value);
             
-            if (tone >= 0xffff) {
+            if (tone <= 0xffff) {
                 // Create an 8-byte buffer with the specified values
                 const buffer = new ArrayBuffer(8);
                 const dataView = new DataView(buffer);
@@ -57,6 +57,49 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
+
+class Mod_Beep extends FirmwareMod {
+        constructor() {
+            super("Beep", "Repeater Ton Call", 0);
+            this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1050");
+         //   this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1310");
+        }
+
+        apply(firmwareData) {
+            const offset = 0x29cc;
+            const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
+         //   const tone2 = Math.trunc(parseInt(this.inputTone2.value) * 10.32444);
+
+            if (tone <= 0xFFFF) {
+                // Create an 8-byte buffer with the specified values
+                const buffer = new ArrayBuffer(8);
+                const dataView = new DataView(buffer);
+
+                // Set tone1 and tone2 at their respective offsets
+                dataView.setUint32(0, tone, true); // true indicates little-endian byte order
+              //  dataView.setUint32(4, tone2, true);
+
+                // Convert the buffer to a Uint8Array
+                const tonesHex = new Uint8Array(buffer);
+
+                // Replace the 8-byte section at the offset with the new buffer
+                firmwareData = replaceSection(firmwareData, tonesHex, offset);
+                //firmwareData = replaceSection(firmwareData, hexString("96"), 0x29cc+4);
+
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,
+        
+
+        
+        
   class Mod_5tonetest extends FirmwareMod {
         constructor() {
             super("5-tone ZVEI2 (Experimental)", "To send a selective 5-tone ZVEI2 instead of DTMF 123A1", 0);
