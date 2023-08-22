@@ -407,6 +407,41 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
+     class Mod_AirCopy extends FirmwareMod {
+        constructor() {
+            super("AIR COPY", "Change the AIR COPY Freq to copy wireless the memory channels and settings from one radio to another over the air. The default is 410,025 MHz. To enter in this feature press F2 [Flashlight] + PTT together while switching power on.", 0);
+            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequência Air Copy (Hz)", "433600000");
+ 
+        }
+
+        apply(firmwareData) {
+            const offset = 0x5568;
+            const freq = Math.trunc(parseInt(this.inputFreq1.value) * 0.1);
+
+            if (freq <= 0x04a67102 ) {
+                // Create an 8-byte buffer with the specified values
+                const buffer = new ArrayBuffer(4);
+                const dataView = new DataView(buffer);
+                
+                dataView.setUint32(0, freq, true);
+
+                // Convert the buffer to a Uint8Array
+                const freqHex = new Uint8Array(buffer);
+
+                // Replace the 8-byte section at the offset with the new buffer
+                firmwareData = replaceSection(firmwareData, freqHex, offset);
+                //firmwareData = replaceSection(firmwareData, hexString("96"), 0xae9a);
+
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,    
     class Mod_CustomFm_radio extends FirmwareMod {
         constructor() {
             super("FM Radio Band:", "Change FM Radio Frequenzy Range", "0");
