@@ -155,22 +155,22 @@ class Mod_Beep extends FirmwareMod {
             super("TX and RX from 18-1300MHz (Tunas1337 diffs by RECON)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
         }
         apply(firmwareData) {
-            const offset0 = 0x150d;  //diffs by spm81 taken from Tunas1337 18-1300 Mod   
+        //     0x150d by spm81 hey thats is already in 0x150b at the end bytes included so its redunant! greez Recon
             const offset1 = 0x180E;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset2 = 0xe078;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset3 = 0xe0a8;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset4 = 0x150b;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const oldData1 = hexString("cf2a");  //TX lock //
-            const oldData2 = hexString("80cba4"); // lower limit 50 lock
-            const oldData3 = hexString("00879303"); // upper limit 600 lock
-            const oldData4 = hexString("00404b4c00008793037c");
+            const oldData2 = hexString("80cba4"); // lower rx-limit 50 lock, I do know u cant say these are numbers rather to be functions like push mov etc.. than not beeing numbers in bin.
+            const oldData3 = hexString("00879303"); // upper rx-limit 600 lock
+            const oldData4 = hexString("00404b4c00008793037c"); // full TX range @ 0x150c: 40xxxx00xxxxxx0x7c
             const newData1 = hexString("5de0"); //unlock TX 50-600 by R3CON //
-         /* const newData0 = hexString("771b0080a4bf07"); //??? spm81 additions// */
-            const newData2 = hexString("40771b"); //set lower freq to 18 by R3CON
-            const newData3 = hexString("80a4bf07"); //set upper freq to 1300 by R3CON 
+         /* const newData0 = hexString("xxxx771b0080a4bf07xx"); //??? spm81 // crap it already part of 0x150b,d, see newData4. No need twice!!! */
+            const newData2 = hexString("40771b"); //set lower rx freq to 18 by R3CON
+            const newData3 = hexString("80a4bf07"); //set upper rx freq to 1300 by R3CON 
             const newData4 = hexString("0040771b0080a4bf077c"); // TX full range by R3CON
             if (compareSection(firmwareData, oldData1, offset1) && compareSection(firmwareData, oldData2, offset2) && compareSection(firmwareData, oldData3, offset3) && compareSection(firmwareData, oldData4, offset4)) {
-             /* firmwareData = replaceSection(firmwareData, newData0, offset0); //spma81 additions */
+             /* firmwareData = replaceSection(firmwareData, newData0, offset0); //spma81 additions// this is redunant obsolete see rem RECON */
                 firmwareData = replaceSection(firmwareData, newData1, offset1);
                 firmwareData = replaceSection(firmwareData, newData2, offset2);
                 firmwareData = replaceSection(firmwareData, newData3, offset3);
@@ -258,9 +258,11 @@ class Mod_Beep extends FirmwareMod {
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "600");
             this.inputMinTX.disabled = true;
             this.inputMaxTX.disabled = true; // need coding help to patch it on 2 different offsets/places for RX and TX combiened!!!  
+                //better solution generate from hexstring the xx bits these are the diffs from full TX range @ 0x150c: 40xxxx00xxxxxx0x7c
+
         }
 
-        apply(firmwareData) {
+            apply(firmwareData) {
             const offset = 0x150c;
             const txStart = parseInt(this.inputMinTX.value) * 100000;
             const txStop = parseInt(this.inputMaxTX.value) * 100000;
