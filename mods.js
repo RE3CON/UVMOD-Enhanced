@@ -326,6 +326,56 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
+    class Mod_CustomFm_radio extends FirmwareMod {
+        constructor() {
+            super("FM Radio cutom freq Band:", "Change FM Radio Frequenzy Range", "0");
+
+            this.select6476mhz = addRadioButton(this.modSpecificDiv, "FM Radio 64 - 76 MHz", "select6476mhz", "selectFm_radio");
+            this.select87108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
+            this.select88108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 88 - 108 MHz", "select88108mhz", "selectFm_radio");
+
+            this.select87108mhz.checked = true;
+
+            
+        }
+
+        apply(firmwareData) {
+            if (this.select6476mhz.checked) {
+                const Reg05 = hexString("df0a0000");
+                const MOVSR0 = hexString("5020c000");
+                const MOVSR1 = hexString("5f21");
+                
+                firmwareData = replaceSection(firmwareData, MOVSR0, 0xa2f4);
+                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
+                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
+                firmwareData = replaceSection(firmwareData, MOVSR1, 0x6456);
+                log(`Sucesso: ${this.name} aplicado.`);
+                
+            }
+            if (this.select87108mhz.checked) {
+                const Reg05 = hexString("5f0a0000");
+                const MOVSR0 = hexString("6c20c000");
+                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
+                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
+                log(`Sucesso: ${this.name} aplicado.`);
+                
+            }
+            else if (this.select88108mhz.checked) {
+                const Reg05 = hexString("5f0a0000");
+                const MOVSR0 = hexString("6e20c000");
+                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
+                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
+                log(`Sucesso: ${this.name} aplicado.`);
+
+                
+            }
+            
+            
+            return firmwareData;
+        
+        }
+    }
+    ,    
     class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
