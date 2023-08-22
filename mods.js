@@ -435,11 +435,10 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,*/  
-        class Mod_BacklightDuration extends FirmwareMod {
+       /* class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
 
-           /* this.select1 = addRadioButton(this.modSpecificDiv, "1x - up to 5s backlight (default value)", "select1", "selectBacklightDuration");*/
             this.select2 = addRadioButton(this.modSpecificDiv, "2x - up to 10s Backlight on", "select2", "selectBacklightDuration");
             this.select4 = addRadioButton(this.modSpecificDiv, "4x - up to 20s Backlight on", "select4", "selectBacklightDuration");
             this.select8 = addRadioButton(this.modSpecificDiv, "8x - up to 40s Backlight on", "select8", "selectBacklightDuration");
@@ -452,9 +451,7 @@ class Mod_5tonetest extends FirmwareMod {
             const offset = 0x5976;
             const buffer = new ArrayBuffer(4);
             const dataView = new DataView(buffer);
-           /* if (this.select1.checked) {
-                dataView.setUint32(0, 64, true);
-            }*/
+           
             if (this.select2.checked) {
                 dataView.setUint32(0, 128, true);
             }
@@ -470,7 +467,7 @@ class Mod_5tonetest extends FirmwareMod {
           /*  else if (this.selectTriplica.checked) {
                 const triABR = hexString("a0");//a0 = 40 segundos
                 firmwareData = replaceSection(firmwareData, triABR, 0x5976);
-            }*/  ///argh.... !Matoz @spm81
+            }  ///argh.... !Matoz @spm81
 
             const newData = new Uint8Array(buffer);
             firmwareData = replaceSection(firmwareData, newData, offset);
@@ -479,7 +476,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,*/
    class Mod_Font extends FirmwareMod {
         constructor() {
             super("Font", "Changes the font to one of the following custom fonts: ", 0);
