@@ -386,7 +386,7 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,
-      /*
+      /*  
       class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
@@ -407,7 +407,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,*/
+    ,
     class Mod_ABR extends FirmwareMod {//just testing...
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
@@ -434,7 +434,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,*/
        /* class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
@@ -740,7 +740,7 @@ class Mod_5tonetest extends FirmwareMod {
 class Mod_AirCopy extends FirmwareMod {
         constructor() {
             super("AIR COPY Freq", "Changes the frequency of AIR COPY to copy the memory from one radio to another via RF without the need for cables and a computer, the default value for copying over the air, also known as AIR COPY, is 410.025 MHz. Instructions: With the radio off press F2 [Flashlight] + PTT and turn on the radio.", 0);
-            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequecy Air Copy (Hz)", "433600000");
+            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequência Air Copy (Hz)", "433600000");
  
         }
 
