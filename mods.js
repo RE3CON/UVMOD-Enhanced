@@ -12,7 +12,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
 //must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
-                firmwareData = replaceSection(firmwareData, newData, 0x29cc:0x29cd);
+                firmwareData = replaceSection(firmwareData, newData, 0x29cc);
                 log(`Success: ${this.name} applied.`);
             }
             else {
@@ -604,7 +604,7 @@ class Mod_Beep extends FirmwareMod {
         }
     }
     ,    
-    class Mod_DoubleBacklightDuration extends FirmwareMod {
+    /*class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
         }
@@ -651,7 +651,7 @@ class Mod_Beep extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,*/
     class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
             super("ABR Backlight Time-Out Duration (Experimental)", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
@@ -660,7 +660,7 @@ class Mod_Beep extends FirmwareMod {
             this.select2 = addRadioButton(this.modSpecificDiv, "2x - up to 10s LCD backlight", "select2", "selectBacklightDuration");
             this.select4 = addRadioButton(this.modSpecificDiv, "4x - up to 20s LCD backlight", "select4", "selectBacklightDuration");
             this.select8 = addRadioButton(this.modSpecificDiv, "8x - up to 40s LCD backlight", "select8", "selectBacklightDuration");
-            this.select40 = addRadioButton(this.modSpecificDiv, "10x - up to 60s LCD backlight", "select10", "selectBacklightDuration");
+         /*   this.select40 = addRadioButton(this.modSpecificDiv, "10x - up to 60s LCD backlight", "select10", "selectBacklightDuration"); //joking martz*/
             
             this.select2.checked = true;
         }
@@ -670,7 +670,7 @@ class Mod_Beep extends FirmwareMod {
             const buffer = new ArrayBuffer(4);
             const dataView = new DataView(buffer);
            /* if (this.select1.checked) {
-                dataView.setUint32(0, 64, true);
+                dataView.setUint32(0, 64, true);//is 1x default but hey rather enhance the max possible selectable valie in menu from 5 to 10 as in piotr and annemonic mods, combined with freq steps patch!!!
             }*/
             if (this.select2.checked) {
                 dataView.setUint32(0, 128, true);
@@ -681,11 +681,11 @@ class Mod_Beep extends FirmwareMod {
             else if (this.select8.checked) {
                 dataView.setUint32(0, 256, true);
             }
-            else if (this.select10.checked) {
-                dataView.setUint32(0, 64*5, true);    
+           // else if (this.select10.checked) {
+           //     dataView.setUint32(0, 256, true);    //kidding Martz
               //  const triABR = hexString("a0");//a0 = 40 segundos
-                firmwareData = replaceSection(firmwareData, triABR, 0x5976);
-            }
+               // firmwareData = replaceSection(firmwareData, triABR, 0x5976);
+           // }
 
             const newData = new Uint8Array(buffer);
             firmwareData = replaceSection(firmwareData, newData, offset);
