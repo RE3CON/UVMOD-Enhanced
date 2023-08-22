@@ -57,55 +57,6 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
-class Mod_5tonetest extends FirmwareMod {
-        constructor() {
-            super("5-tone ZVEI2", "Test for use test to send a selective 5-tone ZVEI2 instead of DTMF 123A1 (Experimental ONLY!) ", 0);
-            this.inputTone1 = addInputField(this.modSpecificDiv, "Tone 1 frequency (Hz)", "1270");
-            this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 3 frequency (Hz)", "1060");
-            this.inputTone3 = addInputField(this.modSpecificDiv, "Tone 9 frequency (Hz)", "2200");
-            this.inputToneA = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1160");
-                      }
-        apply(firmwareData) {
-            const offset = 0xa4e0;
-            const tone1 = Math.trunc(parseInt(this.inputTone1.value) * 10.32444);
-            const tone2 = Math.trunc(parseInt(this.inputTone2.value) * 10.32444);
-            const tone3 = Math.trunc(parseInt(this.inputTone3.value) * 10.32444);
-            const toneA = Math.trunc(parseInt(this.inputToneA.value) * 10.32444);
-
-           /* if (tone1 <= 0xFFFF && tone2 <= 0xFFFF) {*/
-                // Create an 8-byte buffer with the specified values
-                const buffer = new ArrayBuffer(28);
-                const dataView = new DataView(buffer);
-
-                dataView.setUint32(0, tone1, true); // true indicates little-endian byte order
-                dataView.setUint32(8, tone2, true);
-                dataView.setUint32(12, tone3, true);
-                dataView.setUint32(24, toneA, true);
-
-                // Convert the buffer to a Uint8Array
-                const tonesHex = new Uint8Array(buffer);
-
-
-
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4dc);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4dd);
-                firmwareData = replaceSection(firmwareData, tonesHex, offset);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4e4);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4e5);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f0);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f1);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f4);
-                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f5);
-                log(`Success: ${this.name} applied.`);
-            /*}
-            else {
-                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
-            }*/
-
-            return firmwareData;
-        }
-    }
-    ,
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
@@ -138,101 +89,42 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,  //add 500k steps @0xe0d2: C409 changed to 50C3   
+    ,  //add 500k steps @0xe0d2: 0xC4 0x09 changed to 0x50 0xC3   
     class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
-        coclass Mod_ChangeTXLimits extends FirmwareMod {
         constructor() {
-            super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range..", 0);
+            super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
-            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "600");
-            this.hidden = true;
-           
+            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "600");
+            this.inputMinTX.disabled = true;
+            this.inputMaxTX.disabled = true; // need coding help to patch it on 2 different offsets/places for RX and TX combiened!!!  
         }
 
         apply(firmwareData) {
-            const txOffset = 0x150c;
-            const rxOffset = 0x1514;
+            const offset = 0x150c;
             const txStart = parseInt(this.inputMinTX.value) * 100000;
             const txStop = parseInt(this.inputMaxTX.value) * 100000;
-            const rxStart = txStart;
-            const rxStop = txStop;
+
             if ((txStart <= txStop) && (txStart >= 1800000) && (txStart <= 130000000) && (txStop >= 1800000) && (txStop <= 130000000)) {
-
-                const txBuffer = new ArrayBuffer(8);
-                const txDataView = new DataView(txBuffer);
-
-                txDataView.setUint32(0, txStart, true);
-                txDataView.setUint32(4, txStop, true);
-
-                const txHex = new Uint8Array(txBuffer);
-
-                firmwareData = replaceSection(firmwareData, txHex, txOffset);
-
-                const rxBuffer = new ArrayBuffer(8);
-                const rxDataView = new DataView(rxBuffer);
-
-                rxDataView.setUint32(0, rxStart, true);
-                rxDataView.setUint32(4, rxStop, true);
-
-                const rxHex = new Uint8Array(rxBuffer);
-
-                firmwareData = replaceSection(firmwareData, rxHex, rxOffset);
-                
-            }
-
-            else {
-                log(`Error in ${this.name}: Incorrect data! The frequencies must be greater than 18 MHz and less than 1300 MHz, the maximum greater than or equal to the minimum. ${txStart}`);
-            }
-
-            return firmwareData;
-        }
-    }    
-    ,     
-     class Mod_ChangetxRXLimits extends FirmwareMod {
-        constructor() {
-            super("Estender Limites de RX (UVMOD Mod by Matoz)", "Permite a recepÃ§Ã£o  na faixa de frequÃªncia especificada.", 0);
-            this.inputMinTX = addInputField(this.modSpecificDiv, "Especifique um novo valor para a frequÃªncia mÃ­nima na faixa de 1-1300 MHz:", "50");
-            this.inputMaxTX = addInputField(this.modSpecificDiv, "Especifique um novo valor para a frequÃªncia mÃ¡xima na faixa de 1 a 1300 MHz:", "600");
-         //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
-         //   this.selectRXTX = addRadioButton(this.modSpecificDiv, "RX + TX", "selectSbar", "selectApp");
-            //this.hidden = true;
-            
-        }
-
-        apply(firmwareData) {
-            
-            const offsetlow = 0xe078;
-            const offsethi = 0xe0a8;
-            const txStart = parseInt(this.inputMinTX.value) * 100000;
-            const txStop = parseInt(this.inputMaxTX.value) * 100000;
-
-            if ((txStart <= txStop) && (txStart >= 100000) && (txStart <= 130000000) && (txStop >= 100000) && (txStop <= 130000000)) {
 
                 const buffer = new ArrayBuffer(8);
                 const dataView = new DataView(buffer);
 
                 dataView.setUint32(0, txStart, true);
-                
+                dataView.setUint32(4, txStop, true);
 
                 const txHex = new Uint8Array(buffer);
 
-                firmwareData = replaceSection(firmwareData, txHex, offsetlow);
-                dataView.setUint32(0, txStop, true);
-                firmwareData = replaceSection(firmwareData, txHex, offsethi);
-           //     if (this.selectRX.checked) {}
-            //    else if (this.selectRXTX.checked) {
-              //  firmwareData = replaceSection(firmwareData, hexString("1868"), 0x180e);}//43CC
-                //else
+                firmwareData = replaceSection(firmwareData, txHex, offset);
                 log(`Success: ${this.name} applied.`);
             }
             else {
-                log(`Error in ${this.name}: Incorrect data! The frequencies must be greater than 18 MHz and less than 1300 MHz, the maximum greater than or equal to the minimum. `);
+                log(`Error in ${this.name}: Incorrect data! The frequencies must be greater than 18 MHz and less than 1300 MHz, the maximum greater than or equal to the minimum.`);
             }
 
             return firmwareData;
         }
     }
-    ,          
+    ,     
     class Mod_DisableTXlock extends FirmwareMod {
         constructor() {
             super("Disable TX Lock from 50-600 MHz", "Enables transmitting on frequencies from 50 MHz to 600 MHz. The harmonic wave radiation can be stronger than on the input frequency and cause severe interference!", 0);
@@ -386,8 +278,55 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,
-      /*  
-      class Mod_DoubleBacklightDuration extends FirmwareMod {
+    class Mod_Font extends FirmwareMod {
+        constructor() {
+            super("Font", "Changes the font apperiance on LCD to one of the following custom fonts: ", 0);
+
+            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, replace the bold digits with bigger, a bit higher in size fonts.", "selectVCR", "selectFont");
+            this.selectFuturistic = addRadioButton(this.modSpecificDiv, "Futuristic Font (by DO7OO), replaces bold and small digits in a futuristic look.", "selectFuturistic", "selectFont");
+            this.selectVCR.checked = true;
+
+        }
+
+        apply(firmwareData) {
+            if (this.selectVCR.checked) {
+                const bigDigits = hexString("0000F8FC0686C6E6F676FCF80000001F3F7767636160703F1F0000000000181CFEFE00000000000000000060607F7F60600000000000181C8686868686C6FC780000007E7F6361616161616060000000181C0606868686C6FC7800000018387060616161733F1E00000080C0E070381CFEFE00000000000707060606067F7F06060000007E7E6666666666E6C68600000018387060606060703F1F000000F8FC8686868686861C180000001F3F7161616161733F1E000000060606060686C6E67E3E000000000000007F7F0100000000000078FCC686868686C6FC780000001E3F7361616161733F1E00000078FCC68686868686FCF800000018387161616161713F1F000000008080808080808080000000000001010101010101010000");
+                firmwareData = replaceSection(firmwareData, bigDigits, 0xd502);
+            }
+            else if (this.selectFuturistic.checked) {
+                const bigDigits = hexString("00FEFF01010101018181FFFF00007F7F40404040407F7F7F7F000000000000008080FFFF0000000000000000007F7F7F7F00000000018181818181818181FFFE00007F7F7F7F404040404040400000818181818181818181FFFE0000404040404040407F7F7F7F00007FFF80808080808080FFFF0000000000000000007F7F7F7F0000FEFF8181818181818181810000404040404040407F7F7F7F0000FEFF81818181818181818100007F7F7F7F40404040407F7F0000010101010101018181FFFE0000000000000000007F7F7F7F0000FEFF81818181818181FFFF00007F7F40404040407F7F7F7F0000FEFF81818181818181FFFF0000000000000000007F7F7F7F000000808080808080808080000000000303030303030303030000");
+                const smallDigits = hexString("007E414141797F00000000787F000079794949494E0049494949797E0007080808787F004E4949497979007E79494949790001010101797E007E494949797F000E090909797F0008080808080000000000000000");
+                firmwareData = replaceSection(firmwareData, bigDigits, 0xd502);
+                firmwareData = replaceSection(firmwareData, smallDigits, 0xd620);
+            }
+
+            log(`Success: ${this.name} applied.`);
+            return firmwareData;
+        }
+    }
+    ,
+    class Mod_FreqCopyTimeout extends FirmwareMod {
+        constructor() {
+            super("Disable Freq Copy Timeout", "Prevents freq copy and CTCSS decoder from timeout with \"SCAN FAIL\", allowing both functions to run indefinitely until a signal is found.", 0);
+        }
+
+        apply(firmwareData) {
+            const offset = 0x4bbc;
+            const oldData = hexString("521c");
+            const newData = hexString("00bf");
+            if (compareSection(firmwareData, oldData, offset)) {
+                firmwareData = replaceSection(firmwareData, newData, offset);
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,
+    class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
         }
@@ -434,103 +373,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,*/
-       /* class Mod_BacklightDuration extends FirmwareMod {
-        constructor() {
-            super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
-
-            this.select2 = addRadioButton(this.modSpecificDiv, "2x - up to 10s Backlight on", "select2", "selectBacklightDuration");
-            this.select4 = addRadioButton(this.modSpecificDiv, "4x - up to 20s Backlight on", "select4", "selectBacklightDuration");
-            this.select8 = addRadioButton(this.modSpecificDiv, "8x - up to 40s Backlight on", "select8", "selectBacklightDuration");
-            this.select10 = addRadioButton(this.modSpecificDiv, "10x - up to 50s Backlight on", "select10", "selectBacklightDuration");
-            
-            this.select2.checked = true;
-        }
-
-        apply(firmwareData) {
-            const offset = 0x5976;
-            const buffer = new ArrayBuffer(4);
-            const dataView = new DataView(buffer);
-           
-            if (this.select2.checked) {
-                dataView.setUint32(0, 128, true);
-            }
-            else if (this.select4.checked) {
-                dataView.setUint32(0, 192, true);
-            }
-            else if (this.select8.checked) {
-                dataView.setUint32(0, 256, true);
-            }
-           else if (this.select10.checked) {
-                dataView.setUint32(0, 320, true);
-            }         
-          /*  else if (this.selectTriplica.checked) {
-                const triABR = hexString("a0");//a0 = 40 segundos
-                firmwareData = replaceSection(firmwareData, triABR, 0x5976);
-            }  ///argh.... !Matoz @spm81
-
-            const newData = new Uint8Array(buffer);
-            firmwareData = replaceSection(firmwareData, newData, offset);
-            log(`Success: ${this.name} applied.`);
-
-            return firmwareData;
-        }
-    }
-    ,*/
-   class Mod_Font extends FirmwareMod {
-        constructor() {
-            super("Font", "Changes the font to one of the following custom fonts: ", 0);
-
-            this.selectVCR = addRadioButton(this.modSpecificDiv, "VCR Font, replaces the bold digits with bigger Font", "selectVCR", "selectFont");
-            this.selectFuturistic = addRadioButton(this.modSpecificDiv, "Futuristic Font (by DO7OO), replaces big and small digits", "selectFuturistic", "selectFont");
-            this.selectTunas1337 = addRadioButton(this.modSpecificDiv, "Font by Tunas1337, replaces letters and numbers", "selectTunas1337","selectFont");
-
-            this.selectVCR.checked = true;
-
-        }
-
-        apply(firmwareData) {
-            if (this.selectVCR.checked) {
-                const bigDigits = hexString("0000F8FC0686C6E6F676FCF80000001F3F7767636160703F1F0000000000181CFEFE00000000000000000060607F7F60600000000000181C8686868686C6FC780000007E7F6361616161616060000000181C0606868686C6FC7800000018387060616161733F1E00000080C0E070381CFEFE00000000000707060606067F7F06060000007E7E6666666666E6C68600000018387060606060703F1F000000F8FC8686868686861C180000001F3F7161616161733F1E000000060606060686C6E67E3E000000000000007F7F0100000000000078FCC686868686C6FC780000001E3F7361616161733F1E00000078FCC68686868686FCF800000018387161616161713F1F000000008080808080808080000000000001010101010101010000");
-                firmwareData = replaceSection(firmwareData, bigDigits, 0xd502);
-            }
-            else if (this.selectFuturistic.checked) {
-                const bigDigits = hexString("00FEFF01010101018181FFFF00007F7F40404040407F7F7F7F000000000000008080FFFF0000000000000000007F7F7F7F00000000018181818181818181FFFE00007F7F7F7F404040404040400000818181818181818181FFFE0000404040404040407F7F7F7F00007FFF80808080808080FFFF0000000000000000007F7F7F7F0000FEFF8181818181818181810000404040404040407F7F7F7F0000FEFF81818181818181818100007F7F7F7F40404040407F7F0000010101010101018181FFFE0000000000000000007F7F7F7F0000FEFF81818181818181FFFF00007F7F40404040407F7F7F7F0000FEFF81818181818181FFFF0000000000000000007F7F7F7F000000808080808080808080000000000303030303030303030000");
-                const smallDigits = hexString("007E414141797F00000000787F000079794949494E0049494949797E0007080808787F004E4949497979007E79494949790001010101797E007E494949797F000E090909797F0008080808080000000000000000");
-                firmwareData = replaceSection(firmwareData, bigDigits, 0xd502);
-                firmwareData = replaceSection(firmwareData, smallDigits, 0xd620);
-            }
-            else if (this.selectTunas1337.checked) {
-                const letters = hexString("00000000FCFC0000000000000D0D00000000007C00007C0C0000000000000000000020E03820F8200000010F0109070100000070C88E88100000040C08380907007088887800C0B00000040200070808000080FCC43C000000000708090B0607000000063E000000000000000000000000000000E0100C0000000000071820000000000418F0000000000060300F00000000404080F0404000000002010003000000808080F0808000000000000700000000000000000000000000004C3C0800000080808080808000000000000000000000000000000000000000000C0C00000000000000C03804000000380601000000E018C8C808F0000007081111180F0000001008F8000000001010101F10100000001008080818F00000101814121110000010080808D830000008101111120E000000C0E010F8000000060504041F04000000F8C8C8C808000008101010180F0000E010C8C8C808000007091010100F0000080808C8E818000000001C070000000000F8080808F000000E111111110E0000F018080818F0000001131212190F0000000060600000000000000C0C00000000000060600000000000004C3C0800000000C020201008000000000101020400002020202020200000010101010101000008103020C0C000000402020100000000000C84C42C18000000000D0C000000E01008888890E0000F1023242422070000C03818E00000001C030202030F1000F8F88888887000001F1F1010100F0600E030080808180000070C101010180800F80808081870C0001F101010180E030000F8888888880000001F10101010000000F8888888880800001F000000000000E03008080818000007081010111F0000F880808080F800001F000000001F000000000808F8080000000010101F1000000008080808F8000008181010180F0000F8F880C0301800001F1F0101030C100000F8000000000000001F101010101000F8788000E0F800001F000303001F0000F818E08000F800001F0000030C1F0000E01808081870C00007181010180E0300F8F8080808F060001F1F010101000000E01808081870C00007181030504E4300F8F8080808F000001F1F01030718000020F888880810000008181011110F0400080808F8080808000000001F00000000F800000000F8000007181010180F000038E000008078080000031E1807000000F80080C00000F8001F1807011E1F01000830C08070180000100C0301061800000018608000C03800000000011F000000080808C868180000181C1311101010000000F8080808000000007F40404000000038C000000000000000010638400000080808F8000000004040407F0000000000807030C00000000001000000010000000000000000000040404040404040000000081000000000000000000000000000404040408000000C121212121F0000F8804040408000001F081010100F02000080404040400000070810101010000080C0404080F800000F181010081F000000804040408000000F0A1212121302004040E0F84848000000001F1F0000000000C04040C04040006997949492D16000F880404040C000001F000000001F0000004040D8D80000000000001F1F0000000000404040D8D8000000808080FF3F00F8F80000804000001F1F020304181000000008F8000000000000001F10100000C0404080404080001F00001F00001F0000C080404040C000001F000000001F0080C04040408000000F181010100F0200C080404040800000FF081010100F020080C0404040C000000F18101008FF000000C0804040400000001F01000000000080C040404000000008111212120C00004040F0404040000000000F1010101000C000000000C000000F181010081F0000C000000000C0000000031C18060100C0800000800000C0001F1807031C1C030040C0000080400000100807070D100000C000000000C0400080834C300E01000040404040C0C000001018161311100000000000F8080800000002037D40400000000000FC00000000000000FF00000000080808F8000000004040407F00000000008080000080000001000001010100");
-                firmwareData = replaceSection(firmwareData, letters, 0xd67c);
-            }
-            log(`Sucesso: ${this.name} aplicado.`);
-            return firmwareData;
-        }
-    }
-    ,     
-    class Mod_FreqCopyTimeout extends FirmwareMod {
-        constructor() {
-            super("Disable Freq Copy Timeout", "Prevents freq copy and CTCSS decoder from timeout with \"SCAN FAIL\", allowing both functions to run indefinitely until a signal is found.", 0);
-        }
-
-        apply(firmwareData) {
-            const offset = 0x4bbc;
-            const oldData = hexString("521c");
-            const newData = hexString("00bf");
-            if (compareSection(firmwareData, oldData, offset)) {
-                firmwareData = replaceSection(firmwareData, newData, offset);
-                log(`Success: ${this.name} applied.`);
-            }
-            else {
-                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
-            }
-
-            return firmwareData;
-        }
-    }
     ,
-    
     class Mod_SkipBootscreen extends FirmwareMod {
         constructor() {
             super("Fast Power-ON", "Skips the bootscreen and goes instantly to the LCD main screen by power on.", 0);
@@ -737,41 +580,6 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,
-class Mod_AirCopy extends FirmwareMod {
-        constructor() {
-            super("AIR COPY Freq", "Changes the frequency of AIR COPY to copy the memory from one radio to another via RF without the need for cables and a computer, the default value for copying over the air, also known as AIR COPY, is 410.025 MHz. Instructions: With the radio off press F2 [Flashlight] + PTT and turn on the radio.", 0);
-            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequência Air Copy (Hz)", "433600000");
- 
-        }
-
-        apply(firmwareData) {
-            const offset = 0x5568;
-            const freq = Math.trunc(parseInt(this.inputFreq1.value) * 0.1);
-
-            if (freq <= 0x04a67102 ) {
-                // Create an 8-byte buffer with the specified values
-                const buffer = new ArrayBuffer(4);
-                const dataView = new DataView(buffer);
-                
-                dataView.setUint32(0, freq, true);
-
-                // Convert the buffer to a Uint8Array
-                const freqHex = new Uint8Array(buffer);
-
-                // Replace the 8-byte section at the offset with the new buffer
-                firmwareData = replaceSection(firmwareData, freqHex, offset);
-                //firmwareData = replaceSection(firmwareData, hexString("96"), 0xae9a);
-
-                log(`Sucesso: ${this.name} aplicado.`);
-            }
-            else {
-                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
-            }
-
-            return firmwareData;
-        }
-    }
-    ,        
     class Mod_EnableSWDPort extends FirmwareMod {
         constructor() {
             super("Enable SWD Port", "Allows via (SWD) Serial Wire Debug. Requires to solder 2-pin wire on the radios mainboard. Alternative to JTAG using the same protocol. ", 0);
@@ -892,54 +700,4 @@ class Mod_AirCopy extends FirmwareMod {
         }
     }
     ,
-    class Mod_CustomFm_radio extends FirmwareMod {
-        constructor() {
-            super("FM Radio:", "Changes the reception range of FM Radio - Experimental", "0");
-
-            this.select6476mhz = addRadioButton(this.modSpecificDiv, "FM Radio 64 - 76 MHz", "select6476mhz", "selectFm_radio");
-            this.select87108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
-            this.select88108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 88 - 108 MHz", "select88108mhz", "selectFm_radio");
-
-            this.select87108mhz.checked = true;
-
-            
-        }
-
-        apply(firmwareData) {
-            if (this.select6476mhz.checked) {
-                const Reg05 = hexString("df0a0000");
-                const MOVSR0 = hexString("5020c000");
-                const MOVSR1 = hexString("5f21");
-                
-                firmwareData = replaceSection(firmwareData, MOVSR0, 0xa2f4);
-                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
-                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                firmwareData = replaceSection(firmwareData, MOVSR1, 0x6456);
-                log(`Sucesso: ${this.name} aplicado.`);
-                
-            }
-            if (this.select87108mhz.checked) {
-                const Reg05 = hexString("5f0a0000");
-                const MOVSR0 = hexString("6c20c000");
-                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
-                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                log(`Sucesso: ${this.name} aplicado.`);
-                
-            }
-            else if (this.select88108mhz.checked) {
-                const Reg05 = hexString("5f0a0000");
-                const MOVSR0 = hexString("6e20c000");
-                firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
-                firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                log(`Success: ${this.name} applied.`);
-
-                
-            }
-            
-            
-            return firmwareData;
-        
-        }
-    }
-    ,    
 ]
