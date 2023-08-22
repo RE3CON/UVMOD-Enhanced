@@ -139,7 +139,7 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,  //add 500k steps @0xe0d2: C409 changed to 50C3   
-   /* class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
+    class Mod_ChangeTXLimits extends FirmwareMod {  // there's something, a lot wrong... and meed more coding skills. It must patch for TX and RX 3 or 4 longer hex strings on different locations/offsets!
         coclass Mod_ChangeTXLimits extends FirmwareMod {
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range..", 0);
@@ -187,7 +187,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }    
-    ,     */
+    ,     
      class Mod_ChangetxRXLimits extends FirmwareMod {
         constructor() {
             super("Estender Limites de RX (UVMOD Mod by Matoz)", "Permite a recepÃ§Ã£o  na faixa de frequÃªncia especificada.", 0);
@@ -386,7 +386,7 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,
-        /*
+      /*  
       class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
@@ -434,7 +434,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,*/  
+    ,*/
        /* class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
@@ -931,7 +931,7 @@ class Mod_AirCopy extends FirmwareMod {
                 const MOVSR0 = hexString("6e20c000");
                 firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
                 firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                log(`Sucesso: ${this.name} aplicado.`);
+                log(`Success: ${this.name} applied.`);
 
                 
             }
