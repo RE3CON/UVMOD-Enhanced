@@ -386,7 +386,7 @@ class Mod_5tonetest extends FirmwareMod {
         }
     }
     ,
-      /*  
+       /* 
       class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("Double Backlight Duration", "Always multiplies the backlight duration set on the radio by x2. A value of 5 results to increase the light to 10 seconds.", 0);
@@ -407,7 +407,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,*/
     class Mod_ABR extends FirmwareMod {//just testing...
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
@@ -434,7 +434,7 @@ class Mod_5tonetest extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,*/
+    ,
        /* class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
             super("ABR Backlight Time-Out Duration", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
