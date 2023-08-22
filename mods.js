@@ -57,6 +57,55 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
+  class Mod_5tonetest extends FirmwareMod {
+        constructor() {
+            super("5-tone ZVEI2", "Test for use test to send a selective 5-tone ZVEI2 instead of DTMF 123A1 - Experimental", 0);
+            this.inputTone1 = addInputField(this.modSpecificDiv, "Tone 1 frequency (Hz)", "1270");
+            this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 3 frequency (Hz)", "1060");
+            this.inputTone3 = addInputField(this.modSpecificDiv, "Tone 9 frequency (Hz)", "2200");
+            this.inputToneA = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1160");
+                      }
+        apply(firmwareData) {
+            const offset = 0xa4e0;
+            const tone1 = Math.trunc(parseInt(this.inputTone1.value) * 10.32444);
+            const tone2 = Math.trunc(parseInt(this.inputTone2.value) * 10.32444);
+            const tone3 = Math.trunc(parseInt(this.inputTone3.value) * 10.32444);
+            const toneA = Math.trunc(parseInt(this.inputToneA.value) * 10.32444);
+
+           /* if (tone1 <= 0xFFFF && tone2 <= 0xFFFF) {*/
+                // Create an 8-byte buffer with the specified values
+                const buffer = new ArrayBuffer(28);
+                const dataView = new DataView(buffer);
+
+                dataView.setUint32(0, tone1, true); // true indicates little-endian byte order
+                dataView.setUint32(8, tone2, true);
+                dataView.setUint32(12, tone3, true);
+                dataView.setUint32(24, toneA, true);
+
+                // Convert the buffer to a Uint8Array
+                const tonesHex = new Uint8Array(buffer);
+
+
+
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4dc);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4dd);
+                firmwareData = replaceSection(firmwareData, tonesHex, offset);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4e4);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4e5);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f0);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f1);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f4);
+                firmwareData = replaceSection(firmwareData, hexString("00"), 0xa4f5);
+                log(`Success: ${this.name} applied.`);
+            /*}
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }*/
+
+            return firmwareData;
+        }
+    }
+    ,
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
