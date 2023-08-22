@@ -9,7 +9,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
             const minValue = 1000;
             const maxValue = 3950;
             const inputValue = parseInt(this.contrastValue.value);
-
+//must be redone with math instr. write from offset 0x29cc to 0x29cd !
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
                 firmwareData = replaceSection(firmwareData, newData, 0x29cc);
@@ -59,7 +59,7 @@ class Mod_changeTone extends FirmwareMod {
     ,
   class Mod_5tonetest extends FirmwareMod {
         constructor() {
-            super("5-tone ZVEI2", "Test for use test to send a selective 5-tone ZVEI2 instead of DTMF 123A1 - Experimental", 0);
+            super("5-tone ZVEI2 - Experimental", "To send a selective 5-tone ZVEI2 instead of DTMF 123A1", 0);
             this.inputTone1 = addInputField(this.modSpecificDiv, "Tone 1 frequency (Hz)", "1270");
             this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 3 frequency (Hz)", "1060");
             this.inputTone3 = addInputField(this.modSpecificDiv, "Tone 9 frequency (Hz)", "2200");
@@ -165,7 +165,7 @@ class Mod_changeTone extends FirmwareMod {
     ,//just a quick edit... EOT credits by RE3CON
    class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
-            super("Extend RX Limits - Eperimental", "Allows receive in the specified frequency range.", 0);
+            super("Custom RX Limits - Experimental", "Allows receive in the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "600");
          //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
@@ -266,7 +266,7 @@ class Mod_changeTone extends FirmwareMod {
     ,//just a quick edit... from tx-lock on all freq. EOT credits by RE3CON
    class Mod_EnableTXEverywhereButAirBand extends FirmwareMod {
         constructor() {
-            super("Enable TX everywhere except Air Band", "DANGER! Allows transmitting on all frequencies except air band (118 - 137 MHz). Only use this mod for testing, do not transmit on illegal frequencies!", 0);
+            super("Enable TX everywhere except Air Band", "Allows transmitting on all frequencies except air band (118 - 137 MHz).", 0);
             this.hidden = true;
         }
 
@@ -609,6 +609,49 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
+    class Mod_BacklightDuration extends FirmwareMod {
+        constructor() {
+            super("ABR Backlight Time-Out Duration (Experimental)", "Multiplies the LCD Backlight time ABR Menu settings by value (exept off) 1/2/3/4/5 seconds x 2 or x 4. A value of 5 is 10 seconds or 20 seconds: ", 0);
+
+           /* this.select1 = addRadioButton(this.modSpecificDiv, "1x - up to 5s backlight (default value)", "select1", "selectBacklightDuration");*/
+            this.select2 = addRadioButton(this.modSpecificDiv, "2x - up to 10s LCD backlight", "select2", "selectBacklightDuration");
+            this.select4 = addRadioButton(this.modSpecificDiv, "4x - up to 20s LCD backlight", "select4", "selectBacklightDuration");
+            this.select8 = addRadioButton(this.modSpecificDiv, "8x - up to 40s LCD backlight", "select8", "selectBacklightDuration");
+            this.select40 = addRadioButton(this.modSpecificDiv, "10x - up to 60s LCD backlight", "select10", "selectBacklightDuration");
+            
+            this.select2.checked = true;
+        }
+
+        apply(firmwareData) {
+            const offset = 0x5976;
+            const buffer = new ArrayBuffer(4);
+            const dataView = new DataView(buffer);
+           /* if (this.select1.checked) {
+                dataView.setUint32(0, 64, true);
+            }*/
+            if (this.select2.checked) {
+                dataView.setUint32(0, 128, true);
+            }
+            else if (this.select4.checked) {
+                dataView.setUint32(0, 192, true);
+            }
+            else if (this.select8.checked) {
+                dataView.setUint32(0, 256, true);
+            }
+            else if (this.select10.checked) {
+                dataView.setUint32(0, 320, true);    
+              //  const triABR = hexString("a0");//a0 = 40 segundos
+                firmwareData = replaceSection(firmwareData, triABR, 0x5976);
+            }
+
+            const newData = new Uint8Array(buffer);
+            firmwareData = replaceSection(firmwareData, newData, offset);
+            log(`Success: ${this.name} applied.`);
+
+            return firmwareData;
+        }
+    }
+    ,    
     class Mod_SkipBootscreen extends FirmwareMod {
         constructor() {
             super("Fast Power-ON", "Skips the bootscreen and goes instantly to the LCD main screen by power on.", 0);
