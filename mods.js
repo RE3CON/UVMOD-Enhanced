@@ -1,7 +1,7 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno Py nor JS, just modding stuff 4 people 2 help
         constructor() {
-            super("Repeater Tone Burst (Experimental)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
+            super("Repeater Tone Burst (Experimental ONLY)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
         }
 
@@ -13,7 +13,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 const newData = new Uint8Array([inputValue]);
                 firmwareData = replaceSection(firmwareData, newData, 0x29cc);//should replace from 0x29cc-0x29cd, maybe +4
-                log(`Success: ${this.name} applied.`);
+                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpack it to compaire`);
             }
             else {
                 log(`ERROR in ${this.name}: Repeater Tone Burst must be a Tone Freq. in Hz from 1000-3950 Hz!`);
@@ -24,7 +24,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
 class Mod_changeTone extends FirmwareMod {
         constructor() {
-            super("Change Relay opening Tone burst (Experimental)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
+            super("Change Relay opening Tone burst (Experimental ONLY)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
                     }
 
@@ -47,7 +47,7 @@ class Mod_changeTone extends FirmwareMod {
                 // Replace the 8-byte section at the offset with the new buffer
                 firmwareData = replaceSection(firmwareData, toneHex, offset);
                 
-                log(`Success: ${this.name} applied.`);
+                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpack it to compaire`);
             }
             else {
                 log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
@@ -60,7 +60,7 @@ class Mod_changeTone extends FirmwareMod {
 
 class Mod_Beep extends FirmwareMod {
         constructor() {
-            super("Beep (Code Test Exerminental)", "Repeater Ton Call", 0);
+            super("Beep (Code Test very Experimental)", "Repeater Ton Call", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1050");
          //   this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1310");
         }
@@ -86,7 +86,7 @@ class Mod_Beep extends FirmwareMod {
                 firmwareData = replaceSection(firmwareData, tonesHex, offset);
                 //firmwareData = replaceSection(firmwareData, hexString("96"), 0x29cc+4);
 
-                log(`Success: ${this.name} applied.`);
+                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpacked to compaire`);
             }
             else {
                 log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
