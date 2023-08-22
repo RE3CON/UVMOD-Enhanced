@@ -1,18 +1,29 @@
 modClasses = [
+// Mod_Tone_ToneBurst by RE3CON@github.com CallSign: RE-3CON (Mil. Research Dev.) converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!        
 class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing and sharing my codes and sharing as it was yours to whosmatt under your name credits instead of mime R3C0N but it doesnt work, Im not finished writing parts of this code!!! 
         constructor() {
             super("Repeater Tone Burst (Experimental ONLY)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
-            this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
+            this.inputTone = addInputField(this.modSpecificDiv, "Enter a new Tone Burst frequency (Hz)", "1050");
+               //this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
         }
 
         apply(firmwareData) {
-            const minValue = 1000;
-            const maxValue = 3950;
-            const inputValue = parseInt(this.contrastValue.value);
+            const offset = 0x29cc;    
+          //  const minValue = 1000;
+          //  const maxValue = 3950;
+          //  const inputValue = parseInt(this.contrastValue.value);
+            const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
 //must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
-            if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
-                const newData = new Uint8Array([inputValue]);
-                firmwareData = replaceSection(firmwareData, newData, 0x29cc);//should replace from 0x29cc-0x29cd, maybe +4
+            //if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
+                if (tone <= 0xFFFF) {
+                // Create an 8-byte buffer with the specified values
+                const buffer = new ArrayBuffer(8);
+                const dataView = new DataView(buffer);
+                dataView.setUint32(0, tone, true);
+                const toneHex = new Uint8Array(buffer);
+                firmwareData = replaceSection(firmwareData, toneHex, offset);
+                //const newData = new Uint8Array([inputValue]);
+                //firmwareData = replaceSection(firmwareData, newData, offset);//should replace from 0x29cc-0x29cd, maybe +4
                 log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpack it to compaire`);
             }
             else {
@@ -22,10 +33,11 @@ class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing 
         }
     }
     ,
-class Mod_changeTone extends FirmwareMod {
+// Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
+class Mod_ToneBurst extends FirmwareMod {
         constructor() {
             super("Change Relay opening Tone burst (Experimental ONLY)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
-            this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
+            this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
                     }
 
         apply(firmwareData) {
@@ -57,11 +69,11 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,
-
+// Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!
 class Mod_Beep extends FirmwareMod {
         constructor() {
-            super("Beep (Code Test very Experimental)", "Repeater Ton Call", 0);
-            this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1050");
+            super("Tone-Burst Repeater + NOAA Tone-Squelch", "Default EU Repeater waleup Ton Call 1750Hz, NOAA-Weather alerts Tone-Squelch demute 1050Hz", 0);
+            this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
          //   this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1310");
         }
 
@@ -80,10 +92,10 @@ class Mod_Beep extends FirmwareMod {
               //  dataView.setUint32(4, tone2, true);
 
                 // Convert the buffer to a Uint8Array
-                const tonesHex = new Uint8Array(buffer);
+                const toneHex = new Uint8Array(buffer);
 
                 // Replace the 8-byte section at the offset with the new buffer
-                firmwareData = replaceSection(firmwareData, tonesHex, offset);
+                firmwareData = replaceSection(firmwareData, toneHex, offset);
                 //firmwareData = replaceSection(firmwareData, hexString("96"), 0x29cc+4);
 
                 log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpacked to compaire`);
