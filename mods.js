@@ -1,7 +1,7 @@
 modClasses = [
 class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno Py nor JS, just modding stuff 4 people 2 help
         constructor() {
-            super("Repeater Tone Burst", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
+            super("Repeater Tone Burst (Experimental)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
             this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
         }
 
@@ -24,7 +24,7 @@ class Mod_ChangeToneBrust extends FirmwareMod { //lets hope it will work. I duno
     ,
 class Mod_changeTone extends FirmwareMod {
         constructor() {
-            super("Change Relay opening Tone burst", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
+            super("Change Relay opening Tone burst (Experimental)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Tone frequency (Hz)", "1750");
                     }
 
@@ -478,8 +478,8 @@ class Mod_changeTone extends FirmwareMod {
     ,
      class Mod_AirCopy extends FirmwareMod {
         constructor() {
-            super("AIR COPY", "Change the AIR COPY Freq to transfer/receive wireless the memory channels and settings from one radio to another over the air. The default is 410,025 MHz. Enter in this feature, press F2 [Flashlight] + PTT together while switching power on.", 0);
-            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequência Air Copy (Hz)", "433600000");
+            super("AIR COPY", "Change the AIR COPY Freq to transfer/receive wireless the radio settings with stored memory channels from one radio to another over the air. The default is 410,025 MHz. Enter this feature by press F2 [Flashlight] + PTT together while switching power on.", 0);
+            this.inputFreq1 = addInputField(this.modSpecificDiv, "Frequency Air Copy (Hz)", "433600000");
  
         }
 
@@ -513,7 +513,7 @@ class Mod_changeTone extends FirmwareMod {
     ,    
     class Mod_CustomFm_radio extends FirmwareMod {
         constructor() {
-            super("FM Radio Band:", "Change FM Radio Frequenzy Range", "0");
+            super("FM Radio Band:", "Change the FM Radio Frequenzy Range. FM Default range is 76-108MHz", "0");
 
             this.select6476mhz = addRadioButton(this.modSpecificDiv, "FM Radio 64 - 76 MHz", "select6476mhz", "selectFm_radio");
             this.select87108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
@@ -639,7 +639,7 @@ class Mod_changeTone extends FirmwareMod {
                 dataView.setUint32(0, 256, true);
             }
             else if (this.select10.checked) {
-                dataView.setUint32(0, 320, true);    
+                dataView.setUint32(0, 64*5, true);    
               //  const triABR = hexString("a0");//a0 = 40 segundos
                 firmwareData = replaceSection(firmwareData, triABR, 0x5976);
             }
