@@ -112,6 +112,7 @@ class Mod_changeTone extends FirmwareMod {
             super("TX and RX from 18-1300MHz (Tunas1337 Mod diffs)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
         }
         apply(firmwareData) {
+            const offset0 = 0x150d;  //diffs by spm81 taken from Tunas1337 18-1300 Mod   
             const offset1 = 0x180E;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset2 = 0xe078;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset3 = 0xe0a8;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
@@ -121,10 +122,12 @@ class Mod_changeTone extends FirmwareMod {
             const oldData3 = hexString("00879303"); // upper limit 600 lock
             const oldData4 = hexString("00404b4c00008793037c");
             const newData1 = hexString("5de0"); //unlock TX 50-600 by R3CON //
+         /* const newData0 = hexString("771b0080a4bf07"); //??? spm81 additions// */
             const newData2 = hexString("40771b"); //set lower freq to 18 by R3CON
             const newData3 = hexString("80a4bf07"); //set upper freq to 1300 by R3CON 
             const newData4 = hexString("0040771b0080a4bf077c"); // TX full range by R3CON
             if (compareSection(firmwareData, oldData1, offset1) && compareSection(firmwareData, oldData2, offset2) && compareSection(firmwareData, oldData3, offset3) && compareSection(firmwareData, oldData4, offset4)) {
+             /* firmwareData = replaceSection(firmwareData, newData0, offset0); //spma81 additions */
                 firmwareData = replaceSection(firmwareData, newData1, offset1);
                 firmwareData = replaceSection(firmwareData, newData2, offset2);
                 firmwareData = replaceSection(firmwareData, newData3, offset3);
@@ -139,6 +142,27 @@ class Mod_changeTone extends FirmwareMod {
         }
     }
     ,  //add 500k steps @0xe0d2: 0xC4 0x09 changed to 0x50 0xC3  
+   class Mod_add500Ksteps extends FirmwareMod {
+        constructor() {
+            super("Add 500kHz Steps", "Switch in 0,5 MHz Steps the freq up and down. Usefull >999MHz to reach above the GHz range", 0);//Diffs by RE3CON, taken from Tunas1337
+        }
+
+        apply(firmwareData) {
+            const offset = 0xe0d2;
+            const oldData = hexString("c409");
+            const newData = hexString("50c3");
+            if (compareSection(firmwareData, oldData, offset)) {
+                firmwareData = replaceSection(firmwareData, newData, offset);
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,//just a quick edit... EOT credits by RE3CON
    class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
             super("Extend RX Limits - Eperimental", "Allows receive in the specified frequency range.", 0);
