@@ -11,8 +11,8 @@ modClasses = [
             const offset = 0x29cc;    
           //  const minValue = 1000;
           //  const maxValue = 3950;
-          //  const inputValue = parseInt(this.contrastValue.value);
-            const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
+              const tone = parseInt(this.contrastValue.value);
+          //  const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
 //must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
             //if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
                 if (tone <= 0xFFFF) {
@@ -33,6 +33,8 @@ modClasses = [
         }
     }
     ,*/
+
+        ///  HERE COMES THE RIGHT DEAL JUST IN TIME BY RE3CON CODED
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
 class Mod_ToneBurst extends FirmwareMod {
         constructor() {
@@ -70,46 +72,6 @@ class Mod_ToneBurst extends FirmwareMod {
     }
     ,
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!
-/*class Mod_Beep extends FirmwareMod {
-        constructor() {
-            super("Tone-Burst Repeater + NOAA Tone-Squelch", "Default EU Repeater waleup Ton Call 1750Hz, NOAA-Weather alerts Tone-Squelch demute 1050Hz", 0);
-            this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
-         //   this.inputTone2 = addInputField(this.modSpecificDiv, "Tone 2 frequency (Hz)", "1310");
-        }
-
-        apply(firmwareData) {
-            const offset = 0x29cc;
-            const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
-         //   const tone2 = Math.trunc(parseInt(this.inputTone2.value) * 10.32444);
-
-            if (tone <= 0xFFFF) {
-                // Create an 8-byte buffer with the specified values
-                const buffer = new ArrayBuffer(8);
-                const dataView = new DataView(buffer);
-
-                // Set tone1 and tone2 at their respective offsets
-                dataView.setUint32(0, tone, true); // true indicates little-endian byte order
-              //  dataView.setUint32(4, tone2, true);
-
-                // Convert the buffer to a Uint8Array
-                const toneHex = new Uint8Array(buffer);
-
-                // Replace the 8-byte section at the offset with the new buffer
-                firmwareData = replaceSection(firmwareData, toneHex, offset);
-                //firmwareData = replaceSection(firmwareData, hexString("96"), 0x29cc+4);
-
-                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpacked to compaire`);
-            }
-            else {
-                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
-            }
-
-            return firmwareData;
-        }
-    }
-    ,*/
-        
-
         
         
   class Mod_5tonetest extends FirmwareMod {
@@ -199,7 +161,7 @@ class Mod_ToneBurst extends FirmwareMod {
     ,  //add 500k steps @0xe0d2: 0xC4 0x09 changed to 0x50 0xC3  
    class Mod_add500Ksteps extends FirmwareMod {
         constructor() {
-            super("Add 500kHz Steps", "Switch the freq in 0,5 MHz Steps. Usefull >999MHz to reach above the GHz range quickly", 0);//Diffs by RE3CON, taken from Tunas1337
+            super("Add 500kHz Steps (Experimental)", "Switch the freq in 0,5 MHz Steps. Usefull >999MHz to reach above the GHz range quickly", 0);//Diffs by RE3CON, taken from Tunas1337
         }
 
         apply(firmwareData) {
