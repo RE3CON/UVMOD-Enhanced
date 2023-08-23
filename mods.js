@@ -1,5 +1,5 @@
 modClasses = [
-// Mod_Tone_ToneBurst by RE3CON@github.com CallSign: RE-3CON (Mil. Research Dev.) converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!        
+// Mod_Tone_ToneBurst by @RE3CON.github.com CallSign: RE-3CON (Mil. Research Dev.) converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!        
 class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing and sharing my codes and sharing as it was yours to whosmatt under your name credits instead of mime R3C0N but it doesnt work, Im not finished writing parts of this code!!! 
         constructor() {
             super("Repeater Tone Burst (Experimental ONLY)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
@@ -221,8 +221,8 @@ class Mod_Beep extends FirmwareMod {
    class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
             super("Custom RX Limits (Experimental)", "Allows receive in the specified frequency range.", 0);
-            this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
-            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "600");
+            this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "40");
+            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "990");
          //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
          //   this.selectRXTX = addRadioButton(this.modSpecificDiv, "RX + TX", "selectSbar", "selectApp");
             //this.hidden = true;
@@ -263,14 +263,14 @@ class Mod_Beep extends FirmwareMod {
         }
     }
     ,            
-    class Mod_ChangeTXLimits extends FirmwareMod {  // Change TX Limits mod by RE3CON  
+    class Mod_ChangeTXLimits extends FirmwareMod {  // Mod_ChangeTXLimits written by @RE3CON  
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "50");
-            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "600");
-            this.inputMinTX.disabled = true;
-            this.inputMaxTX.disabled = true; // Chanhe TX Limits mod by RE3CON  
-                //better solution generate from hexstring the xx bits these are the diffs from full TX range @ 0x150c: 40xxxx00xxxxxx0x7c
+            this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the maximum frequency in the range 18-1300 MHz:", "890");
+            //this.inputMinTX.disabled = true;
+            //this.inputMaxTX.disabled = true; // Change TX Limits mod by RE3CON  
+     //better solution generate from hexstring the xx bits these are the diffs from full TX range @ 0x150c: 40xxxx00xxxxxx0x7c
 
         }
 
