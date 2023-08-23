@@ -38,8 +38,8 @@ modClasses = [
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
 class Mod_ToneBurst extends FirmwareMod {
         constructor() {
-            super("Repeater Tone Burst (by RE3CON)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
-            this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
+            super("Repeater Tone Burst (by RE3CON)", "Changes the Tone by PTT and Side F2 Key, used to open HAM Repeaters and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
+            this.inputTone = addInputField(this.modSpecificDiv, "Enter a new Tone Burst frequency (Hz)", "1050");
                     }
 
         apply(firmwareData) {
