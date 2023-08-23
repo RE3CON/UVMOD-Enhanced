@@ -1,6 +1,6 @@
 modClasses = [
 // Mod_Tone_ToneBurst by @RE3CON.github.com CallSign: RE-3CON (Mil. Research Dev.) converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!        
-class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing and sharing my codes and sharing as it was yours to whosmatt under your name credits instead of mime R3C0N but it doesnt work, Im not finished writing parts of this code!!! 
+/*class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing and sharing my codes and sharing as it was yours to whosmatt under your name credits instead of mime R3C0N but it doesnt work, Im not finished writing parts of this code!!! 
         constructor() {
             super("Repeater Tone Burst (Experimental ONLY)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "Enter a new Tone Burst frequency (Hz)", "1050");
@@ -32,11 +32,11 @@ class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing 
             return firmwareData;
         }
     }
-    ,
+    ,*/
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
 class Mod_ToneBurst extends FirmwareMod {
         constructor() {
-            super("Change Relay opening Tone burst (Experimental ONLY)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
+            super("Repeater Tone Burst (by RE3CON)", "Changes the Tone by PTT and Side F1 Key, used to open HAM Relays and NOAA Channels. The default is 1750 Hz. To open NOAA Ton-Squelch set 1050 Hz.", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
                     }
 
@@ -59,7 +59,7 @@ class Mod_ToneBurst extends FirmwareMod {
                 // Replace the 8-byte section at the offset with the new buffer
                 firmwareData = replaceSection(firmwareData, toneHex, offset);
                 
-                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpack it to compaire`);
+                log(`Success: ${this.name} applied.`);
             }
             else {
                 log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
@@ -70,7 +70,7 @@ class Mod_ToneBurst extends FirmwareMod {
     }
     ,
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!
-class Mod_Beep extends FirmwareMod {
+/*class Mod_Beep extends FirmwareMod {
         constructor() {
             super("Tone-Burst Repeater + NOAA Tone-Squelch", "Default EU Repeater waleup Ton Call 1750Hz, NOAA-Weather alerts Tone-Squelch demute 1050Hz", 0);
             this.inputTone = addInputField(this.modSpecificDiv, "New Tone Burst Frequency (Hz)", "1050");
@@ -107,7 +107,7 @@ class Mod_Beep extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,
+    ,*/
         
 
         
