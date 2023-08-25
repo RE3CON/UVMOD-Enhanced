@@ -89,7 +89,7 @@ class Mod_ToneBurst extends FirmwareMod {
 /* DO PAY PROPPER CREDITS! CODE TX RX on all Bands 18-1300 diffs by RE3CON, CODE Disable TX Lock by RE3CON */      
   class Mod_TXRXOnAllBands extends FirmwareMod {
         constructor() {
-            super("TX and RX from 18-1300MHz (Tunas1337 diffs by RECON)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
+            super("TX and RX from 18-1300MHz (Tunas1337 diffs by RECON)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range. The harmonic wave radiation can be stronger than on the input frequency and cause severe interference!", 0);
         }
         apply(firmwareData) {
             const offset1 = 0x180E;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
@@ -142,7 +142,7 @@ class Mod_ToneBurst extends FirmwareMod {
     ,//just a quick edit... EOT credits by RE3CON
   class Mod_CustomTXRange extends FirmwareMod {
         constructor() {
-            super("Custom TX Range", "This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
+            super("Custom TX Freq Range (allow/lock)", "You can either block a range of frequencies or allow a specific freq range from 18-1300 MHz. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
             
             this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
             this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
@@ -173,7 +173,7 @@ class Mod_ToneBurst extends FirmwareMod {
         }
     }
     ,      
-   /*class Mod_ChangeRXLimits extends FirmwareMod {
+   class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
             super("Custom RX Limits (Experimental)", "Allows receive in the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "40");
@@ -217,7 +217,7 @@ class Mod_ToneBurst extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,            
+    ,     /*       
     class Mod_ChangeTXLimits extends FirmwareMod {  // Mod_ChangeTXLimits written by @RE3CON  
         constructor() {
             super("Extend TX Limits (Experimental)", "Allows transmission on the specified frequency range.", 0);
