@@ -1,40 +1,37 @@
-modClasses = [
-// Mod_Tone_ToneBurst by @RE3CON.github.com CallSign: RE-3CON (Mil. Research Dev.) converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!        
-/*class Mod_ChangeToneBrust extends FirmwareMod { // NO thanks spm81 for stealing and sharing my codes and sharing as it was yours to whosmatt under your name credits instead of mime R3C0N but it doesnt work, Im not finished writing parts of this code!!! 
+modClasses = [//catch all and replace var at this offset 0x1804
+class Mod_CustomTXRange extends FirmwareMod {
         constructor() {
-            super("Repeater Tone Burst (Experimental ONLY)", "Push Button F2 [Flashlight] + PTT at the same time together, sends a 1750Hz wakeup tone by default for repeater in the EU. To demute NOAA Channels requires a 1050 Hz Tone. Other not so common repeater tone pulse freq are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
-            this.inputTone = addInputField(this.modSpecificDiv, "Enter a new Tone Burst frequency (Hz)", "1050");
-               //this.contrastValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst Hz value from 1000-3950:", "1750");
+            super("Custom TX Range", "This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
+            
+            this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
+            this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
+            this.selectBlock.checked = true;
+            
+            this.lowFreq = addInputField(this.modSpecificDiv, "Lower Limit (Hz)", "118000000");
+            this.highFreq = addInputField(this.modSpecificDiv, "Upper Limit (Hz)", "137000000");
         }
 
         apply(firmwareData) {
-            const offset = 0x29cc;    
-          //  const minValue = 1000;
-          //  const maxValue = 3950;
-              const tone = parseInt(this.contrastValue.value);
-          //  const tone = Math.trunc(parseInt(this.inputTone.value) * 10.32444);
-//must be redone, rewritten with math instr. write from offset 0x29cc to 0x29cd !
-            //if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
-                if (tone <= 0xFFFF) {
-                // Create an 8-byte buffer with the specified values
-                const buffer = new ArrayBuffer(8);
-                const dataView = new DataView(buffer);
-                dataView.setUint32(0, tone, true);
-                const toneHex = new Uint8Array(buffer);
-                firmwareData = replaceSection(firmwareData, toneHex, offset);
-                //const newData = new Uint8Array([inputValue]);
-                //firmwareData = replaceSection(firmwareData, newData, offset);//should replace from 0x29cc-0x29cd, maybe +4
-                log(`Success: ${this.name} applied. See result in a Hex or Diff viewer but unpack it to compaire`);
+            const offset = 0x1804;
+            let shellcode;
+            if (this.selectBlock.checked) {
+                shellcode = hexString("f0b5014649690968054a914205d3054a914202d20020c04301e00020ffe7f0bd1111111122222222");
+            } else if (this.selectAllow.checked) {
+                shellcode = hexString("F0B5014649690968054A914204D3054A914201D2002002E00020C043FFE7F0BD1111111122222222");
             }
-            else {
-                log(`ERROR in ${this.name}: Repeater Tone Burst must be a Tone Freq. in Hz from 1000-3950 Hz!`);
-            }
+            const dataView = new DataView(shellcode.buffer);
+            const lowFreq = Math.floor(this.lowFreq.value / 10);
+            const highFreq = Math.floor(this.highFreq.value / 10);
+            dataView.setUint32(32, lowFreq, true);
+            dataView.setUint32(36, highFreq, true);
+
+            firmwareData = replaceSection(firmwareData, shellcode, offset);
+            log(`Success: ${this.name} applied.`);
+
             return firmwareData;
         }
     }
-    ,*/
-
-        ///  HERE COMES THE RIGHT DEAL JUST IN TIME BY RE3CON CODED
+    ,
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
 class Mod_ToneBurst extends FirmwareMod {
         constructor() {
