@@ -1,37 +1,5 @@
-modClasses = [//catch all and replace var at this offset 0x1804
-class Mod_CustomTXRange extends FirmwareMod {
-        constructor() {
-            super("Custom TX Range", "This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
-            
-            this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
-            this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
-            this.selectBlock.checked = true;
-            
-            this.lowFreq = addInputField(this.modSpecificDiv, "Lower Limit (Hz)", "118000000");
-            this.highFreq = addInputField(this.modSpecificDiv, "Upper Limit (Hz)", "137000000");
-        }
+modClasses = [
 
-        apply(firmwareData) {
-            const offset = 0x1804;
-            let shellcode;
-            if (this.selectBlock.checked) {
-                shellcode = hexString("f0b5014649690968054a914205d3054a914202d20020c04301e00020ffe7f0bd1111111122222222");
-            } else if (this.selectAllow.checked) {
-                shellcode = hexString("F0B5014649690968054A914204D3054A914201D2002002E00020C043FFE7F0BD1111111122222222");
-            }
-            const dataView = new DataView(shellcode.buffer);
-            const lowFreq = Math.floor(this.lowFreq.value / 10);
-            const highFreq = Math.floor(this.highFreq.value / 10);
-            dataView.setUint32(32, lowFreq, true);
-            dataView.setUint32(36, highFreq, true);
-
-            firmwareData = replaceSection(firmwareData, shellcode, offset);
-            log(`Success: ${this.name} applied.`);
-
-            return firmwareData;
-        }
-    }
-    ,
 // Mod_Tone_ToneBurst by RE3CON converted/rewritten to java from python mod by IK8JHL mod_change_Tone_1750Hz.py !!! DO Pay propper credits !!!      
 class Mod_ToneBurst extends FirmwareMod {
         constructor() {
@@ -86,10 +54,8 @@ class Mod_ToneBurst extends FirmwareMod {
             const tone3 = Math.trunc(parseInt(this.inputTone3.value) * 10.32444);
             const toneA = Math.trunc(parseInt(this.inputToneA.value) * 10.32444);
 
-           /* if (tone1 <= 0xFFFF && tone2 <= 0xFFFF) {*/
-                // Create an 8-byte buffer with the specified values
-                const buffer = new ArrayBuffer(28);
-                const dataView = new DataView(buffer);
+            const buffer = new ArrayBuffer(28);
+            const dataView = new DataView(buffer);
 
                 dataView.setUint32(0, tone1, true); // true indicates little-endian byte order
                 dataView.setUint32(8, tone2, true);
@@ -126,22 +92,19 @@ class Mod_ToneBurst extends FirmwareMod {
             super("TX and RX from 18-1300MHz (Tunas1337 diffs by RECON)", "Allows recieve (RX) and transmit (TX) on the frequency range from 18 MHz - 1300 MHz. This TX Mod includes the following Mods: Disable TX Lock, Enhance RX Frequency Range.", 0);
         }
         apply(firmwareData) {
-        //     0x150d by spm81 hey thats is already in 0x150b at the end bytes included so its redunant! Yah I wrpte it a while ago greez Recon
             const offset1 = 0x180E;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset2 = 0xe078;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset3 = 0xe0a8;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const offset4 = 0x150b;  //diffs by RE3CON taken from Tunas1337 18-1300 Mod
             const oldData1 = hexString("cf2a");  //TX lock //
-            const oldData2 = hexString("80cba4"); // lower rx-limit 50 lock, I do know u cant say these are numbers rather to be functions like push mov etc.. than not beeing numbers in bin.
+            const oldData2 = hexString("80cba4"); // lower rx-limit 50 lock, I do know u cant say these are numbers rather to be functions like push mov etc.. than not beeing bin numbers
             const oldData3 = hexString("00879303"); // upper rx-limit 600 lock
             const oldData4 = hexString("00404b4c00008793037c"); // full TX range @ 0x150c: 40xxxx00xxxxxx0x7c
             const newData1 = hexString("5de0"); //unlock TX 50-600 by R3CON //
-         /* const newData0 = hexString("xxxx771b0080a4bf07xx"); //??? spm81 // crap it already part of 0x150b,d, see newData4. No need twice!!! */
             const newData2 = hexString("40771b"); //set lower rx freq to 18 by R3CON
             const newData3 = hexString("80a4bf07"); //set upper rx freq to 1300 by R3CON 
             const newData4 = hexString("0040771b0080a4bf077c"); // TX full range by R3CON
             if (compareSection(firmwareData, oldData1, offset1) && compareSection(firmwareData, oldData2, offset2) && compareSection(firmwareData, oldData3, offset3) && compareSection(firmwareData, oldData4, offset4)) {
-             /* firmwareData = replaceSection(firmwareData, newData0, offset0); //spma81 additions// this is redunant obsolete see rem RECON */
                 firmwareData = replaceSection(firmwareData, newData1, offset1);
                 firmwareData = replaceSection(firmwareData, newData2, offset2);
                 firmwareData = replaceSection(firmwareData, newData3, offset3);
@@ -177,7 +140,40 @@ class Mod_ToneBurst extends FirmwareMod {
         }
     }
     ,//just a quick edit... EOT credits by RE3CON
-   class Mod_ChangeRXLimits extends FirmwareMod {
+  class Mod_CustomTXRange extends FirmwareMod {
+        constructor() {
+            super("Custom TX Range", "This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
+            
+            this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
+            this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
+            this.selectBlock.checked = true;
+            
+            this.lowFreq = addInputField(this.modSpecificDiv, "Lower Limit (Hz)", "118000000");
+            this.highFreq = addInputField(this.modSpecificDiv, "Upper Limit (Hz)", "136000000");
+        }
+
+        apply(firmwareData) {//catch all and replace var at this offset 0x1804
+            const offset = 0x1804;
+            let shellcode;
+            if (this.selectBlock.checked) {
+                shellcode = hexString("f0b5014649690968054a914205d3054a914202d20020c04301e00020ffe7f0bd1111111122222222");
+            } else if (this.selectAllow.checked) {
+                shellcode = hexString("F0B5014649690968054A914204D3054A914201D2002002E00020C043FFE7F0BD1111111122222222");
+            }
+            const dataView = new DataView(shellcode.buffer);
+            const lowFreq = Math.floor(this.lowFreq.value / 10);
+            const highFreq = Math.floor(this.highFreq.value / 10);
+            dataView.setUint32(32, lowFreq, true);
+            dataView.setUint32(36, highFreq, true);
+
+            firmwareData = replaceSection(firmwareData, shellcode, offset);
+            log(`Success: ${this.name} applied.`);
+
+            return firmwareData;
+        }
+    }
+    ,      
+   /*class Mod_ChangeRXLimits extends FirmwareMod {
         constructor() {
             super("Custom RX Limits (Experimental)", "Allows receive in the specified frequency range.", 0);
             this.inputMinTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "40");
@@ -261,7 +257,7 @@ class Mod_ToneBurst extends FirmwareMod {
             return firmwareData;
         }
     }
-    ,     
+    ,   */  
     class Mod_DisableTXlock extends FirmwareMod {
         constructor() {
             super("Disable TX Lock from 50-600 MHz", "Enables transmitting on frequencies from 50 MHz to 600 MHz. The harmonic wave radiation can be stronger than on the input frequency and cause severe interference!", 0);
