@@ -86,7 +86,6 @@ modClasses = [
             this.inputMaxTX = addInputField(this.modSpecificDiv, "Specify a new value for the minimum frequency in the range 18-1300 MHz:", "990");
          //   this.selectRX = addRadioButton(this.modSpecificDiv, "RX", "selectSbar", "selectApp");
          //   this.selectRXTX = addRadioButton(this.modSpecificDiv, "RX + TX", "selectSbar", "selectApp");
-            //this.hidden = true;
         }
         apply(firmwareData) {
             const offsetlow = 0xe078;
@@ -399,38 +398,53 @@ class Mod_FreqCopyTimeout extends FirmwareMod {
     ,    
     class Mod_CustomFm_radio extends FirmwareMod {
         constructor() {
-            super("FM Radio Band:", "Change the FM Radio Frequenzy Range. FM Default range is 76-108MHz", "0");
-            this.select6476mhz = addRadioButton(this.modSpecificDiv, "FM Radio 64 - 76 MHz", "select6476mhz", "selectFm_radio");
-            this.select87108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
-            this.select88108mhz = addRadioButton(this.modSpecificDiv, "FM Radio 88 - 108 MHz", "select88108mhz", "selectFm_radio");
+            super("FM Radio Band Frequencies", "Changes the FM radio frequency range", "0");
+
+            this.select6476mhz = addRadioButton(this.modSpecificDiv, "64 - 76 MHz", "select6476mhz", "selectFm_radio");
+            this.select64108mhz = addRadioButton(this.modSpecificDiv, "64 - 108 MHz", "select64108mhz", "selectFm_radio");
+            this.select76108mhz = addRadioButton(this.modSpecificDiv, "76 - 108 MHz", "select76108mhz", "selectFm_radio");
+            this.select87108mhz = addRadioButton(this.modSpecificDiv, "86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
+            this.select88108mhz = addRadioButton(this.modSpecificDiv, "88 - 108 MHz", "select88108mhz", "selectFm_radio");
+
             this.select87108mhz.checked = true;
         }
+
         apply(firmwareData) {
-            if (this.select6476mhz.checked) {
+            if (this.select76108mhz.checked) {
+                firmwareData = replaceSection(firmwareData, hexString("5f0a0000"), 0xa274);
+                firmwareData = replaceSection(firmwareData, hexString("5f20c000"), 0xa2f4);
+                firmwareData = replaceSection(firmwareData, hexString("5f20c000"), 0x6452);
+                firmwareData = replaceSection(firmwareData, hexString("8721"), 0x6456);
+            }
+            else if (this.select64108mhz.checked) {
+                firmwareData = replaceSection(firmwareData, hexString("5f0a0000"), 0xa274);
+                firmwareData = replaceSection(firmwareData, hexString("5020c000"), 0x6452);
+            }
+            else if (this.select6476mhz.checked) {
                 const Reg05 = hexString("df0a0000");
                 const MOVSR0 = hexString("5020c000");
                 const MOVSR1 = hexString("5f21");
+
                 firmwareData = replaceSection(firmwareData, MOVSR0, 0xa2f4);
                 firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
                 firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
                 firmwareData = replaceSection(firmwareData, MOVSR1, 0x6456);
-                log(`Sucesso: ${this.name} aplicado.`);
-             }
+            }
             if (this.select87108mhz.checked) {
                 const Reg05 = hexString("5f0a0000");
                 const MOVSR0 = hexString("6c20c000");
                 firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
                 firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                log(`Sucesso: ${this.name} aplicado.`);
-             }
+            }
             else if (this.select88108mhz.checked) {
                 const Reg05 = hexString("5f0a0000");
                 const MOVSR0 = hexString("6e20c000");
                 firmwareData = replaceSection(firmwareData, Reg05, 0xa274);
                 firmwareData = replaceSection(firmwareData, MOVSR0, 0x6452);
-                log(`Sucesso: ${this.name} aplicado.`);
             }
-         return firmwareData;
+            log(`Success: ${this.name} applied.`);
+            return firmwareData;
+
         }
     }
     ,
@@ -496,7 +510,7 @@ class Mod_FreqCopyTimeout extends FirmwareMod {
         apply(firmwareData) {
             const offset = 0x29cc   
             const tone = (this.inputTone.value);
-            if (tone <= 0xffff) {
+            if (tone <= 0xffffffff) {
                 // Create an 8-byte buffer with the specified values
                 const buffer = new ArrayBuffer(8);
                 const dataView = new DataView(buffer);
